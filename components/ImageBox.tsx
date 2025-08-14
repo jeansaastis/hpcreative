@@ -8,6 +8,7 @@ interface ImageBoxProps {
   'height'?: number
   'size'?: string
   'classesWrapper'?: string
+  'imageClassName'?: string // ✅ added
   'data-sanity'?: string
 }
 
@@ -18,18 +19,19 @@ export default function ImageBox({
   height = 2000,
   size = '100vw',
   classesWrapper,
+  imageClassName = 'absolute h-full w-full', // ✅ default value
   ...props
 }: ImageBoxProps) {
   const imageUrl = image && urlForImage(image)?.height(height).width(width).fit('crop').url()
 
   return (
     <div
-      className={`w-full overflow-hidden rounded-[3px] bg-gray-50 ${classesWrapper}`}
+      className={`w-full overflow-hidden rounded-[3px] bg-gray-50 ${classesWrapper || ''}`}
       data-sanity={props['data-sanity']}
     >
       {imageUrl && (
         <Image
-          className="absolute h-full w-full"
+          className={imageClassName} // ✅ now uses prop
           alt={alt}
           width={width}
           height={height}

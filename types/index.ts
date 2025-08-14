@@ -13,6 +13,31 @@ export interface MilestoneItem {
   title?: string
 }
 
+export interface Skill {
+  title: string
+}
+
+export interface MediaItem {
+  title?: string
+  description?: string
+  image?: Image
+  url?: string
+}
+
+export interface HomePagePayload {
+  title?: string
+  overview?: PortableTextBlock[]
+  hero?: {
+    title?: string
+    text?: PortableTextBlock[]
+    image?: Image
+  }
+  skills?: {
+    title?: string | null
+  }[]
+  showcaseProjects?: ShowcaseProject[]
+}
+
 export interface ShowcaseProject {
   _id: string
   _type: string

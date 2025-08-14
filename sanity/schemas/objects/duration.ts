@@ -1,23 +1,22 @@
+// sanity/schemas/objects/duration/index.ts
 import {defineField} from 'sanity'
-import {DurationInput} from './DurationInput'
 
 export default defineField({
-  type: 'object',
   name: 'duration',
   title: 'Duration',
-  components: {
-    input: DurationInput,
-  },
+  type: 'object',
   fields: [
     defineField({
-      type: 'datetime',
       name: 'start',
       title: 'Start',
+      type: 'datetime',
+      validation: (rule) => rule.required(),
     }),
     defineField({
-      type: 'datetime',
       name: 'end',
       title: 'End',
+      type: 'datetime',
+      validation: (rule) => rule.required(),
     }),
   ],
 })

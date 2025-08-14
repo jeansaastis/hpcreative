@@ -1,6 +1,10 @@
+import BlogCard from '@/components/BlogCard'
 import {Header} from '@/components/Header'
+import HeroSection from '@/components/HeroSection'
+import MediaCvSwitcher from '@/components/MediaCvSwitcher'
 import {OptimisticSortOrder} from '@/components/OptimisticSortOrder'
-import {ProjectListItem} from '@/components/ProjectListItem'
+import SkillsGrid from '@/components/SkillsGrid.client'
+import TestimonialsSection from '@/components/TestimonialsSection'
 import type {HomePageQueryResult} from '@/sanity.types'
 import {studioUrl} from '@/sanity/lib/api'
 import {resolveHref} from '@/sanity/lib/utils'
@@ -14,7 +18,17 @@ export interface HomePageProps {
 
 export async function HomePage({data}: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
-  const {overview = [], showcaseProjects = [], title = ''} = data ?? {}
+  const overview = data?.overview ?? []
+  const blogPosts = (data as any)?.blogPosts ?? []
+  const title = data?.title ?? ''
+  const hero = data?.hero ?? null
+  const skills = data?.skills ?? []
+  const safeSkills: {title: string}[] = Array.isArray(skills)
+    ? skills.map((s: any) => ({title: s?.title ?? ''}))
+    : []
+  const mediaGallery = data?.mediaGallery ?? []
+  const cvSection = data?.cvSection
+  const testimonials = data?.testimonials ?? []
 
   const dataAttribute =
     data?._id && data?._type
@@ -28,39 +42,32 @@ export async function HomePage({data}: HomePageProps) {
   return (
     <div className="space-y-20">
       {/* Header */}
-      {title && (
-        <Header
-          id={data?._id || null}
-          type={data?._type || null}
-          path={['overview']}
-          centered
-          title={title}
-          description={overview}
-        />
+      {title && <></>}
+      {/* Hero */}
+      {hero && <HeroSection data={hero} />}
+      {/* Skills */}
+      {safeSkills.length > 0 && <SkillsGrid skills={safeSkills} />}
+
+      {/* Media / CV Switcher */}
+      {(Array.isArray(mediaGallery) && mediaGallery.length > 0) || cvSection ? (
+        <MediaCvSwitcher mediaGallery={mediaGallery} cvSection={cvSection} />
+      ) : null}
+
+      {/* Blog */}
+      {blogPosts.length > 0 && (
+        <section className="w-full py-5 px-6 bg-white">
+          <h2 className="font-display font-bold mb-6 text-5xl">Blogi</h2>
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {blogPosts.map((post: any) => (
+              <li key={post._id || post._key}>
+                <BlogCard post={post} />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
-      {/* Showcase projects */}
-      <div className="mx-auto max-w-[100rem] rounded-md border">
-        <OptimisticSortOrder id={data?._id} path={'showcaseProjects'}>
-          {showcaseProjects &&
-            showcaseProjects.length > 0 &&
-            showcaseProjects.map((project) => {
-              const href = resolveHref(project?._type, project?.slug)
-              if (!href) {
-                return null
-              }
-              return (
-                <Link
-                  className="flex flex-col gap-x-5 p-2 transition odd:border-b odd:border-t hover:bg-gray-50/50 xl:flex-row odd:xl:flex-row-reverse"
-                  key={project._key}
-                  href={href}
-                  data-sanity={dataAttribute?.(['showcaseProjects', {_key: project._key}])}
-                >
-                  <ProjectListItem project={project as any} />
-                </Link>
-              )
-            })}
-        </OptimisticSortOrder>
-      </div>
+      {/* Testimonials */}
+      {testimonials.length > 0 && <TestimonialsSection testimonials={testimonials} />}
     </div>
   )
 }

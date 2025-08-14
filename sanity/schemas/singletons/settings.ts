@@ -1,80 +1,50 @@
-import {CogIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+// schemaTypes/settings.ts
+import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'settings',
   title: 'Settings',
   type: 'document',
-  icon: CogIcon,
-  // Uncomment below to have edits publish automatically as you type
-  // liveEdit: true,
   fields: [
     defineField({
-      name: 'menuItems',
-      title: 'Menu Item list',
-      description: 'Links displayed on the header of your site.',
-      type: 'array',
-      of: [
-        {
-          title: 'Reference',
-          type: 'reference',
-          to: [
-            {
-              type: 'home',
-            },
-            {
-              type: 'page',
-            },
-            {
-              type: 'project',
-            },
-          ],
-        },
-      ],
-    }),
-    defineField({
-      name: 'footer',
-      description: 'This is a block of text that will be displayed at the bottom of the page.',
-      title: 'Footer Info',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'block',
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'Url',
-                  },
-                ],
-              },
-            ],
-          },
-        }),
-      ],
-    }),
-    defineField({
-      name: 'ogImage',
-      title: 'Open Graph Image',
+      name: 'logo',
+      title: 'Site Logo',
       type: 'image',
-      description: 'Displayed on social cards and search engine results.',
       options: {
         hotspot: true,
       },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Alternative text for accessibility',
+        },
+      ],
+      description: 'Optional. Will appear in the center of the navigation bar.',
+    }),
+    defineField({
+      name: 'linkedinUrl',
+      title: 'LinkedIn URL',
+      type: 'url',
+    }),
+    defineField({
+      name: 'menuItems',
+      title: 'Menu Items',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'home'}, {type: 'page'}]}],
+    }),
+    defineField({
+      name: 'footer',
+      title: 'Footer',
+      type: 'array',
+      of: [{type: 'block'}],
+      description: 'Footer text (rich).',
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'OG Image',
+      type: 'image',
     }),
   ],
-  preview: {
-    prepare() {
-      return {
-        title: 'Settings',
-        subtitle: 'Menu Items, Footer Info, and Open Graph Image',
-      }
-    },
-  },
 })

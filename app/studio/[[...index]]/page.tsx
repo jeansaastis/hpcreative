@@ -10,8 +10,8 @@
 import config from '@/sanity.config'
 import {NextStudio} from 'next-sanity/studio'
 
+// keep this a Server Component so we can export metadata/viewport
 export const dynamic = 'force-static'
-
 export {metadata, viewport} from 'next-sanity/studio'
 
 export default function StudioPage() {

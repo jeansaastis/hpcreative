@@ -6,29 +6,32 @@
 import {apiVersion, dataset, projectId, studioUrl} from '@/sanity/lib/api'
 import * as resolve from '@/sanity/plugins/resolve'
 import {pageStructure, singletonPlugin} from '@/sanity/plugins/settings'
+import blogPost from '@/sanity/schemas/documents/blogPost'
 import page from '@/sanity/schemas/documents/page'
-import project from '@/sanity/schemas/documents/project'
+import heroSection from '@/sanity/schemas/heroSection'
+import mediaItem from '@/sanity/schemas/mediaItem'
+import cvSection from '@/sanity/schemas/objects/cvSection'
 import duration from '@/sanity/schemas/objects/duration'
 import milestone from '@/sanity/schemas/objects/milestone'
+import skill from '@/sanity/schemas/objects/skill'
 import timeline from '@/sanity/schemas/objects/timeline'
 import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
+import testimonial from '@/sanity/schemas/testimonial'
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 
-const title =
-  process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || 'Next.js Personal Website with Sanity.io'
+const title = process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || 'HPCreative'
 
 export default defineConfig({
   basePath: studioUrl,
   projectId: projectId || '',
   dataset: dataset || '',
-  title,
+  title: 'hpcreative – studio',
   schema: {
-    // If you want more content types, you can add them to this array
     types: [
       // Singletons
       home,
@@ -36,12 +39,18 @@ export default defineConfig({
       // Documents
       duration,
       page,
-      project,
+      blogPost,
+      heroSection,
+      testimonial,
       // Objects
+      skill,
+      mediaItem,
+      cvSection,
       milestone,
       timeline,
     ],
   },
+
   plugins: [
     structureTool({
       structure: pageStructure([home, settings]),

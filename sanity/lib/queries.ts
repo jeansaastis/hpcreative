@@ -4,20 +4,56 @@ export const homePageQuery = defineQuery(`
   *[_type == "home"][0]{
     _id,
     _type,
+    title,
     overview,
-    showcaseProjects[]{
-      _key,
-      ...@->{
-        _id,
-        _type,
-        coverImage,
-        overview,
-        "slug": slug.current,
-        tags,
-        title,
+    hero->{
+      title,
+      body,
+      image {
+        asset->{
+          url
+        }
       }
     },
-    title,
+    skills[]{
+      "title": coalesce(title, "")
+    },
+    mediaGallery[]{
+      title,
+      description,
+      url,
+      image{
+        asset->{
+          url
+        }
+      }
+    },
+    cvSection{
+      content[], 
+      image{ asset-> { url } }
+    },
+    testimonials[]->{
+      _id,
+      quote,
+      author,
+      role,
+      portrait {
+        asset-> {
+          url
+        }
+      }
+    },
+    "blogPosts": select(
+      defined(blogPosts) && count(blogPosts) > 0 =>
+        blogPosts[]->{
+          _id, _type, "slug": slug.current, title, publishedAt, publisher,
+          coverImage, overview, tags, externalUrl, cardVariant
+        },
+      *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{
+        _id, _type, "slug": slug.current, title, publishedAt, publisher,
+        coverImage, overview, tags, externalUrl, cardVariant
+      }
+    )
   }
 `)
 
@@ -32,19 +68,33 @@ export const pagesBySlugQuery = defineQuery(`
   }
 `)
 
-export const projectBySlugQuery = defineQuery(`
-  *[_type == "project" && slug.current == $slug][0] {
+export const allBlogPostsQuery = defineQuery(`
+  *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc){
     _id,
     _type,
-    client,
-    coverImage,
-    description,
-    duration,
-    overview,
-    site,
     "slug": slug.current,
-    tags,
     title,
+    publishedAt,
+    coverImage,
+    overview,
+    tags,
+    publisher,
+    externalUrl
+  }
+`)
+
+export const blogPostBySlugQuery = defineQuery(`
+  *[_type == "blogPost" && slug.current == $slug][0] {
+    _id,
+    _type,
+    title,
+    publishedAt,
+    publisher,
+    coverImage,
+    overview,
+    body,
+    "slug": slug.current,
+    tags
   }
 `)
 
@@ -53,6 +103,11 @@ export const settingsQuery = defineQuery(`
     _id,
     _type,
     footer,
+    linkedinUrl,
+    logo{
+      asset->{url},
+      alt
+    },
     menuItems[]{
       _key,
       ...@->{

@@ -16,3 +16,30 @@ ul {
 ol {
   list-style-type: disc;
 }
+
+/* Typed CSS vars so the browser interpolates smoothly */
+@property --ang {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 43deg;
+}
+@property --mid {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 46%;
+}
+
+@keyframes card-grad-wiggle {
+  from {
+    --ang: var(--ang-from, 43deg);
+    --mid: var(--mid-from, 46%);
+  }
+  to {
+    --ang: var(--ang-to, 47deg);
+    --mid: var(--mid-to, 50%);
+  }
+}
+
+.gradient-animate {
+  animation: card-grad-wiggle var(--grad-dur, 9s) ease-in-out infinite alternate;
+}
