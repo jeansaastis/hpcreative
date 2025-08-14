@@ -584,7 +584,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: ./sanity/lib/queries.ts
 // Variable: homePageQuery
-// Query: *[_type == "home"][0]{    _id,    _type,    title,    overview,    hero->{      title,      body,      image {        asset->{          url        }      }    },    skills[] {      title    },    mediaGallery[]{      title,      description,      url,      image{        asset->{          url        }      }    },    cvSection{      content[],       image{ asset-> { url } }    },    testimonials[]->{      _id,      quote,      author,      role,      portrait {        asset-> {          url        }      }    },    "blogPosts": select(      defined(blogPosts) && count(blogPosts) > 0 =>        blogPosts[]->{          _id, _type, "slug": slug.current, title, publishedAt, publisher,          coverImage, overview, tags, externalUrl, cardVariant        },      *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{        _id, _type, "slug": slug.current, title, publishedAt, publisher,        coverImage, overview, tags, externalUrl, cardVariant      }    )  }
+// Query: *[_type == "home"][0]{    _id,    _type,    title,    overview,    hero->{      title,      body,      image {        asset->{          url        }      }    },    skills[]{      "title": coalesce(title, "")    },    mediaGallery[]{      title,      description,      url,      image{        asset->{          url        }      }    },    cvSection{      content[],       image{ asset-> { url } }    },    testimonials[]->{      _id,      quote,      author,      role,      portrait {        asset-> {          url        }      }    },    "blogPosts": select(      defined(blogPosts) && count(blogPosts) > 0 =>        blogPosts[]->{          _id, _type, "slug": slug.current, title, publishedAt, publisher,          coverImage, overview, tags, externalUrl, cardVariant        },      *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{        _id, _type, "slug": slug.current, title, publishedAt, publisher,        coverImage, overview, tags, externalUrl, cardVariant      }    )  }
 export type HomePageQueryResult = {
   _id: string
   _type: 'home'
@@ -634,7 +634,7 @@ export type HomePageQueryResult = {
     } | null
   } | null
   skills: Array<{
-    title: string | null
+    title: string | ''
   }> | null
   mediaGallery: Array<{
     title: string | null
@@ -793,12 +793,13 @@ export type AllBlogPostsQueryResult = Array<{
   externalUrl: string | null
 }>
 // Variable: blogPostBySlugQuery
-// Query: *[_type == "blogPost" && slug.current == $slug][0] {    _id,    _type,    title,    publishedAt,    coverImage,    overview,    body,    "slug": slug.current,    tags  }
+// Query: *[_type == "blogPost" && slug.current == $slug][0] {    _id,    _type,    title,    publishedAt,    publisher,    coverImage,    overview,    body,    "slug": slug.current,    tags  }
 export type BlogPostBySlugQueryResult = {
   _id: string
   _type: 'blogPost'
   title: string | null
   publishedAt: string | null
+  publisher: string | null
   coverImage: {
     asset?: {
       _ref: string
@@ -898,10 +899,10 @@ export type SlugsByTypeQueryResult = Array<{
 
 declare module '@sanity/client' {
   interface SanityQueries {
-    '\n  *[_type == "home"][0]{\n    _id,\n    _type,\n    title,\n    overview,\n    hero->{\n      title,\n      body,\n      image {\n        asset->{\n          url\n        }\n      }\n    },\n    skills[] {\n      title\n    },\n    mediaGallery[]{\n      title,\n      description,\n      url,\n      image{\n        asset->{\n          url\n        }\n      }\n    },\n    cvSection{\n      content[], \n      image{ asset-> { url } }\n    },\n    testimonials[]->{\n      _id,\n      quote,\n      author,\n      role,\n      portrait {\n        asset-> {\n          url\n        }\n      }\n    },\n    "blogPosts": select(\n      defined(blogPosts) && count(blogPosts) > 0 =>\n        blogPosts[]->{\n          _id, _type, "slug": slug.current, title, publishedAt, publisher,\n          coverImage, overview, tags, externalUrl, cardVariant\n        },\n      *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{\n        _id, _type, "slug": slug.current, title, publishedAt, publisher,\n        coverImage, overview, tags, externalUrl, cardVariant\n      }\n    )\n  }\n': HomePageQueryResult
+    '\n  *[_type == "home"][0]{\n    _id,\n    _type,\n    title,\n    overview,\n    hero->{\n      title,\n      body,\n      image {\n        asset->{\n          url\n        }\n      }\n    },\n    skills[]{\n      "title": coalesce(title, "")\n    },\n    mediaGallery[]{\n      title,\n      description,\n      url,\n      image{\n        asset->{\n          url\n        }\n      }\n    },\n    cvSection{\n      content[], \n      image{ asset-> { url } }\n    },\n    testimonials[]->{\n      _id,\n      quote,\n      author,\n      role,\n      portrait {\n        asset-> {\n          url\n        }\n      }\n    },\n    "blogPosts": select(\n      defined(blogPosts) && count(blogPosts) > 0 =>\n        blogPosts[]->{\n          _id, _type, "slug": slug.current, title, publishedAt, publisher,\n          coverImage, overview, tags, externalUrl, cardVariant\n        },\n      *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{\n        _id, _type, "slug": slug.current, title, publishedAt, publisher,\n        coverImage, overview, tags, externalUrl, cardVariant\n      }\n    )\n  }\n': HomePageQueryResult
     '\n  *[_type == "page" && slug.current == $slug][0] {\n    _id,\n    _type,\n    body,\n    overview,\n    title,\n    "slug": slug.current,\n  }\n': PagesBySlugQueryResult
     '\n  *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc){\n    _id,\n    _type,\n    "slug": slug.current,\n    title,\n    publishedAt,\n    coverImage,\n    overview,\n    tags,\n    publisher,\n    externalUrl\n  }\n': AllBlogPostsQueryResult
-    '\n  *[_type == "blogPost" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    publishedAt,\n    coverImage,\n    overview,\n    body,\n    "slug": slug.current,\n    tags\n  }\n': BlogPostBySlugQueryResult
+    '\n  *[_type == "blogPost" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    publishedAt,\n    publisher,\n    coverImage,\n    overview,\n    body,\n    "slug": slug.current,\n    tags\n  }\n': BlogPostBySlugQueryResult
     '\n  *[_type == "settings"][0]{\n    _id,\n    _type,\n    footer,\n    linkedinUrl,\n    logo{\n      asset->{url},\n      alt\n    },\n    menuItems[]{\n      _key,\n      ...@->{\n        _type,\n        "slug": slug.current,\n        title\n      }\n    },\n    ogImage,\n  }\n': SettingsQueryResult
     '\n  *[_type == $type && defined(slug.current)]{"slug": slug.current}\n': SlugsByTypeQueryResult
   }

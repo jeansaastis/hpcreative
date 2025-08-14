@@ -43,3 +43,26 @@ ol {
 .gradient-animate {
   animation: card-grad-wiggle var(--grad-dur, 9s) ease-in-out infinite alternate;
 }
+
+/* smooth, continuous float; no resets between cycles */
+@keyframes floatxy {
+  0% {
+    transform: translate(calc(-50% + 0px), calc(-50% + 0px));
+  }
+  25% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
+  }
+  50% {
+    transform: translate(calc(-50% + var(--dx2)), calc(-50% + var(--dy2)));
+  }
+  75% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
+  }
+  100% {
+    transform: translate(calc(-50% + 0px), calc(-50% + 0px));
+  }
+}
+.anim-floatxy {
+  animation: floatxy var(--dur, 10s) ease-in-out var(--delay, 0s) infinite;
+  will-change: transform;
+}

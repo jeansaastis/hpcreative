@@ -3,7 +3,7 @@ import {Header} from '@/components/Header'
 import HeroSection from '@/components/HeroSection'
 import MediaCvSwitcher from '@/components/MediaCvSwitcher'
 import {OptimisticSortOrder} from '@/components/OptimisticSortOrder'
-import SkillsGrid from '@/components/SkillsGrid.client'
+import SkillsGrid from '@/components/SkillsGrid'
 import TestimonialsSection from '@/components/TestimonialsSection'
 import type {HomePageQueryResult} from '@/sanity.types'
 import {studioUrl} from '@/sanity/lib/api'
@@ -40,7 +40,7 @@ export async function HomePage({data}: HomePageProps) {
       : null
 
   return (
-    <div className="space-y-20">
+    <div className="space-y-5">
       {/* Header */}
       {title && <></>}
       {/* Hero */}
