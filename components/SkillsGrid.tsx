@@ -115,18 +115,25 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
   }, [skills.length]) // changes only if count of cards changes
 
   return (
-    <section className="w-full py-10 px-4 bg-blue">
-      <h2 className="font-display text-white p-7 font-bold mb-6 text-4xl">Erityisosaaminen</h2>
+    <section className="w-full py-10 px-2 bg-blue">
+      <h2 className="font-display text-white p-7 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
+        Erityisosaaminen
+      </h2>
 
-      <ul className="grid gap-4 grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
+      <ul className="grid gap-2 sm:gap-4 grid-cols-2 m-0 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
         {skills.map((skill, i) => {
           const cardCircles = circles?.[i] ?? [] // empty on very first paint (SSR), filled right after mount
           return (
-            <li key={`${skill.title}-${i}`} className="group pb-8 sm:pb-2">
+            <li key={`${skill.title}-${i}`} className="group pb-0 sm:pb-8">
               <div
-                className="relative flex items-center justify-center
-                           h-72 w-full rounded-[.5rem] overflow-hidden
-                           text-white font-bold tracking-wide"
+                className="
+                  relative flex items-center justify-center
+                  aspect-[4/5] sm:aspect-[4/5] md:aspect-[4/5]
+                  w-full rounded-[.5rem] overflow-hidden
+                  text-white font-bold tracking-wide
+                  transition-transform duration-300
+                  [--blob-scale:.72] sm:[--blob-scale:.88] md:[--blob-scale:1]
+                "
               >
                 {/* Circles */}
                 <div className="absolute inset-0">
@@ -137,13 +144,12 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
                       style={{
                         left: `${c.x}%`,
                         top: `${c.y}%`,
-                        width: `${c.size}px`,
-                        height: `${c.size}px`,
+                        width: `calc(var(--blob-scale) * ${c.size}px)`,
+                        height: `calc(var(--blob-scale) * ${c.size}px)`,
                         transform: 'translate(-50%, -50%)',
                         background: c.color,
                         filter: `blur(${c.blur}px)`,
                         opacity: c.opacity,
-                        // animation vars (your CSS reads these)
                         ['--dx' as any]: `${c.dx}px`,
                         ['--dy' as any]: `${c.dy}px`,
                         ['--dx2' as any]: `${c.dx2}px`,
@@ -156,7 +162,7 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
                 </div>
 
                 {/* Label */}
-                <span className="font-display z-10 text-3xl px-6 text-center select-none">
+                <span className="font-display z-10 text-[clamp(1rem,4vw,1.75rem)] px-2 text-center select-none">
                   {skill.title}
                 </span>
 

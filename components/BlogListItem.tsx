@@ -13,7 +13,11 @@ export interface BlogPostListItemProps {
     slug: string
     title: string
     publishedAt?: string
-    coverImage?: any
+    coverImage?:
+      | {
+          asset?: {url?: string} // if you project url in GROQ
+        }
+      | any
     overview?: PortableTextBlock[]
     tags?: string[]
   }

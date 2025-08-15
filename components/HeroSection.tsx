@@ -26,7 +26,7 @@ export default function HeroSection({data}: {data: any}) {
         )}
 
         <div className="relative z-5 md:mt-0 md:-ml-24">
-          <div className="relative rounded-[.5rem] p-7 bg-white/90 backdrop-blur-sm shadow-[rgba(0,0,0,0.08)_0px_6px_18px] overflow-hidden">
+          <div className="relative rounded-[.5rem] p-5 md:p-20 bg-white backdrop-blur-sm shadow-[rgba(0,0,0,0.08)_0px_6px_18px] overflow-hidden">
             {title && <h1 className="font-display font-bold mb-4 text-4xl md:text-5xl">{title}</h1>}
             {body && <CustomPortableText id={null} type={null} path={[]} value={body} />}
 

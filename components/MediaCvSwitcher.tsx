@@ -17,7 +17,7 @@ export default function MediaCvSwitcher({
   const isMedia = activeTab === 'media'
 
   return (
-    <section className="w-full py-5 px-6 bg-white">
+    <section className="w-full pt-5 sm:pt-20 px-6 bg-white">
       {/* Accessible, slider-style title control */}
       <div className="mb-6 flex justify-center">
         <div
@@ -28,7 +28,7 @@ export default function MediaCvSwitcher({
           {/* The sliding thumb (behind the labels) */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 w-1/2 m-1 rounded-[.35rem] bg-blue transition-transform duration-200 will-change-transform"
+            className="pointer-events-none absolute inset-y-0 left-0 w-1/2 m-1 rounded-[.35rem] bg-blue transition-transform duration-700 ease-in-out will-change-transform"
             style={{transform: isMedia ? 'translateX(0%)' : 'translateX(100%)'}}
           />
 
@@ -39,7 +39,7 @@ export default function MediaCvSwitcher({
             aria-controls="panel-media"
             id="tab-media"
             onClick={() => setActiveTab('media')}
-            className={`font-display relative uppercase z-10 px-6 py-6 text-lg font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
+            className={`font-display relative uppercase z-10 px-10 py-6 text-md font-semibold transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
               isMedia ? 'text-white' : 'text-black'
             }`}
           >
@@ -53,7 +53,7 @@ export default function MediaCvSwitcher({
             aria-controls="panel-cv"
             id="tab-cv"
             onClick={() => setActiveTab('cv')}
-            className={`relative z-10 px-6 py-3 text-lg font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
+            className={`relative z-10 px-10 py-3 text-md font-semibold transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
               !isMedia ? 'text-white' : 'text-black'
             }`}
           >

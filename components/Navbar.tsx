@@ -28,7 +28,7 @@ export function Navbar({data}: NavbarProps) {
 
   return (
     <header
-      className="sticky top-0 z-20 flex items-center justify-between backdrop-blur px-4 py-4 md:px-16 md:py-5 lg:px-32"
+      className="sticky top-0 z-20 flex items-center justify-between backdrop-blur-sm px-4 py-4 md:px-16 md:py-5 lg:px-32"
       data-sanity={dataAttribute?.('menuItems')}
     >
       {/* Left menu */}
@@ -91,7 +91,7 @@ export function Navbar({data}: NavbarProps) {
             aria-label="LinkedIn"
             className="inline-flex p-1 text-black hover:opacity-70"
           >
-            <LinkedInIcon className="h-5 w-5" />
+            <LinkedInIcon className="h-7 w-7" />
           </Link>
         )}
       </nav>

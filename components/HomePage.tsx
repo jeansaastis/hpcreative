@@ -56,8 +56,10 @@ export async function HomePage({data}: HomePageProps) {
       {/* Blog */}
       {blogPosts.length > 0 && (
         <section className="w-full py-5 px-6 bg-white">
-          <h2 className="font-display font-bold mb-6 text-4xl">Blogi</h2>
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <h2 className="font-display p-7 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
+            Blogi
+          </h2>
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {blogPosts.map((post: any) => (
               <li key={post._id || post._key}>
                 <BlogCard post={post} />
@@ -66,6 +68,7 @@ export async function HomePage({data}: HomePageProps) {
           </ul>
         </section>
       )}
+
       {/* Testimonials */}
       {testimonials.length > 0 && <TestimonialsSection testimonials={testimonials} />}
     </div>

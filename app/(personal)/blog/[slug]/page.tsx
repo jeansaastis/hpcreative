@@ -64,7 +64,7 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
         <div className="mb-8">
           <ImageBox
             image={post.coverImage}
-            alt={post?.title || ''}
+            alt={post.title || 'Cover image'}
             classesWrapper="relative aspect-[16/9]"
           />
         </div>

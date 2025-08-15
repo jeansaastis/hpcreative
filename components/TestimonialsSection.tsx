@@ -94,14 +94,16 @@ export default function TestimonialsSection({testimonials}: {testimonials: Testi
         </div>
       )}
 
-      <h2 className="font-display font-bold mb-6 text-4xl relative z-10">HP:sta sanottua</h2>
+      <h2 className="font-display text-white p-7 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
+        HP:sta sanottua
+      </h2>
 
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 relative z-10">
         {testimonials.map((t, idx) => {
           if (!t?.quote) return null
           return (
             <li key={t._id || idx}>
-              <article className="relative rounded-[.5rem] p-5 md:p-6 min-h-[180px] flex flex-col text-white overflow-hidden">
+              <article className="relative rounded-[.5rem] sm:p-5 md:p-6 min-h-[180px] flex flex-col text-white overflow-hidden">
                 {t.portrait?.asset?.url && (
                   <div className="absolute top-4 left-4 h-10 w-10 rounded-full overflow-hidden ring-1 ring-white/20">
                     <Image
