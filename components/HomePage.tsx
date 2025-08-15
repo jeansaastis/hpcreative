@@ -56,7 +56,7 @@ export async function HomePage({data}: HomePageProps) {
       {/* Blog */}
       {blogPosts.length > 0 && (
         <section className="w-full py-5 px-6 bg-white">
-          <h2 className="font-display font-bold mb-6 text-5xl">Blogi</h2>
+          <h2 className="font-display font-bold mb-6 text-4xl">Blogi</h2>
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {blogPosts.map((post: any) => (
               <li key={post._id || post._key}>

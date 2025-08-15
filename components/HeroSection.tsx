@@ -25,29 +25,20 @@ export default function HeroSection({data}: {data: any}) {
           </div>
         )}
 
-        {/* Text (overlaps image a bit on desktop, sits below on mobile) */}
         <div className="relative z-5 md:mt-0 md:-ml-24">
-          <div
-            className="relative rounded-[.5rem] p-6
-               bg-white/100 backdrop-blur-sm
-               shadow-[rgba(0,0,0,0.08)_0px_6px_18px]
-               overflow-hidden"
-          >
-            {title && <h1 className="font-display font-bold mb-4 text-4xl md:text-6xl">{title}</h1>}
+          <div className="relative rounded-[.5rem] p-7 bg-white/90 backdrop-blur-sm shadow-[rgba(0,0,0,0.08)_0px_6px_18px] overflow-hidden">
+            {title && <h1 className="font-display font-bold mb-4 text-4xl md:text-5xl">{title}</h1>}
             {body && <CustomPortableText id={null} type={null} path={[]} value={body} />}
 
             {/* glossy sheen */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[.5rem]
-                 bg-gradient-to-t from-transparent via-white/15 to-white/40"
+              className="pointer-events-none absolute inset-0 rounded-[.5rem] bg-gradient-to-t from-transparent via-white/15 to-white/40"
             />
             {/* soft diagonal streak */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-y-1/2 -left-1/3 w-2/3
-                 rotate-12 rounded-[1rem]
-                 bg-gradient-to-r from-transparent via-white/25 to-transparent"
+              className="pointer-events-none absolute -inset-y-1/2 -left-1/3 w-2/3 rotate-12 rounded-[1rem] bg-gradient-to-r from-transparent via-white/25 to-transparent"
             />
           </div>
         </div>

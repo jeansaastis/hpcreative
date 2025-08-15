@@ -19,7 +19,7 @@ export default function MediaCvSwitcher({
   return (
     <section className="w-full py-5 px-6 bg-white">
       {/* Accessible, slider-style title control */}
-      <div className="mb-8 flex justify-center">
+      <div className="mb-6 flex justify-center">
         <div
           role="tablist"
           aria-label="Mediassa / CV"
@@ -28,7 +28,7 @@ export default function MediaCvSwitcher({
           {/* The sliding thumb (behind the labels) */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 w-1/2 m-1 rounded-[.35rem] bg-black transition-transform duration-200 will-change-transform"
+            className="pointer-events-none absolute inset-y-0 left-0 w-1/2 m-1 rounded-[.35rem] bg-blue transition-transform duration-200 will-change-transform"
             style={{transform: isMedia ? 'translateX(0%)' : 'translateX(100%)'}}
           />
 
@@ -39,7 +39,7 @@ export default function MediaCvSwitcher({
             aria-controls="panel-media"
             id="tab-media"
             onClick={() => setActiveTab('media')}
-            className={`relative uppercase z-10 px-6 py-3 text-lg font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
+            className={`font-display relative uppercase z-10 px-6 py-6 text-lg font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
               isMedia ? 'text-white' : 'text-black'
             }`}
           >
@@ -69,12 +69,12 @@ export default function MediaCvSwitcher({
           id="panel-media"
           role="tabpanel"
           aria-labelledby="tab-media"
-          className={`transition-opacity duration-300 ${
+          className={`py-10 transition-opacity duration-300 ${
             isMedia ? 'opacity-100' : 'opacity-0 pointer-events-none absolute inset-0'
           }`}
         >
           {Array.isArray(mediaGallery) && mediaGallery.length > 0 && (
-            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {mediaGallery.map((item, idx) => {
                 const card = (
                   <>
@@ -107,7 +107,7 @@ export default function MediaCvSwitcher({
                 return (
                   <li
                     key={idx}
-                    className="relative h-56 sm:h-64 rounded-[.5rem] overflow-hidden group"
+                    className="relative h-64 sm:h-80 lg:h-96 rounded-[.5rem] overflow-hidden group"
                   >
                     {item.url ? (
                       <a

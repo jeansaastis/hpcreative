@@ -1,3 +1,11 @@
+/* styles/index.css */
+
+/* Tailwind entry points — must be present in this file */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your global resets and custom CSS can live anywhere after the @tailwind lines */
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -7,17 +15,15 @@ html {
 p:not(:last-child) {
   margin-bottom: 0.875rem;
 }
-
 ol,
 ul {
   margin-left: 1rem;
 }
-
 ol {
   list-style-type: disc;
 }
 
-/* Typed CSS vars so the browser interpolates smoothly */
+/* Typed CSS vars for the shimmer gradient */
 @property --ang {
   syntax: '<angle>';
   inherits: false;
@@ -40,29 +46,82 @@ ol {
   }
 }
 
-.gradient-animate {
-  animation: card-grad-wiggle var(--grad-dur, 9s) ease-in-out infinite alternate;
+/* Your custom utility layers are valid now because @tailwind utilities is in this file */
+@layer utilities {
+  .blob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 9999px;
+    filter: blur(var(--blur, 16px));
+    opacity: var(--alpha, 0.3);
+    will-change: transform;
+  }
+
+  @keyframes blob-float {
+    0%,
+    100% {
+      transform: translate(calc(-50% + 0px), calc(-50% + 0px));
+    }
+    50% {
+      transform: translate(calc(-50% + var(--dx, 16px)), calc(-50% + var(--dy, 12px)));
+    }
+  }
+
+  .blob-anim {
+    animation: blob-float var(--dur, 12s) ease-in-out var(--delay, 0s) infinite;
+  }
+
+  .blob-layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .blob-layer.ready {
+    opacity: 1;
+    transition: opacity 300ms ease;
+  }
 }
 
-/* smooth, continuous float; no resets between cycles */
-@keyframes floatxy {
+/* (If you still need the older rg* helpers) */
+.rg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.rg.is-ready {
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+@keyframes rg-float {
   0% {
-    transform: translate(calc(-50% + 0px), calc(-50% + 0px));
-  }
-  25% {
-    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate(calc(-50% + var(--dx2)), calc(-50% + var(--dy2)));
-  }
-  75% {
-    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
+    transform: translate3d(var(--dx, 20px), var(--dy, 15px), 0);
   }
   100% {
-    transform: translate(calc(-50% + 0px), calc(-50% + 0px));
+    transform: translate3d(0, 0, 0);
   }
 }
-.anim-floatxy {
-  animation: floatxy var(--dur, 10s) ease-in-out var(--delay, 0s) infinite;
+.rg-anim {
   will-change: transform;
+  animation: rg-float var(--dur, 12s) ease-in-out var(--delay, 0s) infinite;
+}
+
+/* smooth XY float for circles */
+@keyframes floatxy {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(calc(-50% + var(--dx, 20px)), calc(-50% + var(--dy, 15px)));
+  }
+}
+
+.anim-floatxy {
+  will-change: transform;
+  animation: floatxy var(--dur, 12s) ease-in-out var(--delay, 0s) infinite;
 }

@@ -9,6 +9,11 @@ module.exports = {
   ],
   theme: {
     ...theme,
+    extend: {
+      colors: {
+        blue: '#1B2730',
+      },
+    },
     // Overriding fontFamily to use @next/font loaded families
     fontFamily: {
       sans: ['var(--font-sans)', 'system-ui', 'sans-serif'], // Archivo

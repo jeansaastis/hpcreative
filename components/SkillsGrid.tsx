@@ -1,16 +1,21 @@
 'use client'
 
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 
-// palette sampled from the hero photo
-const PALETTE = ['#21231d', '#3d6382', '#6d98ba', '#7d8385', '#a18d5a', '#655e3a', '#d6c4a2']
+const PALETTE = ['#11171C', '#020202', '#1B2730', '#048A81', '#1B2730']
 
 // helpers
-const hexToHsl = (hex: string) => {
-  const m = hex.replace('#', '')
-  const r = parseInt(m.slice(0, 2), 16) / 255
-  const g = parseInt(m.slice(2, 4), 16) / 255
-  const b = parseInt(m.slice(4, 6), 16) / 255
+function hexToHsl(hex: string) {
+  hex = hex.replace(/^#/, '')
+  if (hex.length === 3)
+    hex = hex
+      .split('')
+      .map((c) => c + c)
+      .join('')
+  const int = parseInt(hex, 16)
+  const r = ((int >> 16) & 255) / 255
+  const g = ((int >> 8) & 255) / 255
+  const b = (int & 255) / 255
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
   let h = 0
@@ -26,9 +31,8 @@ const hexToHsl = (hex: string) => {
       case g:
         h = (b - r) / d + 2
         break
-      case b:
+      default:
         h = (r - g) / d + 4
-        break
     }
     h *= 60
   }
@@ -56,10 +60,7 @@ type Circle = {
 }
 
 export default function SkillsGrid({skills}: {skills: Skill[]}) {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-
-  // Read prefers-reduced-motion only on client
+  // read prefers-reduced-motion on client (stable via useMemo)
   const prefersReduced = useMemo(
     () =>
       typeof window !== 'undefined' &&
@@ -67,7 +68,7 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
     [],
   )
 
-  // crypto RNG
+  // crypto RNG (stable function)
   const rnd = useMemo(() => {
     const buf = new Uint32Array(1)
     return () => {
@@ -81,88 +82,58 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
   }, [])
   const r = (min: number, max: number) => min + (max - min) * rnd()
 
-  // cache circles per card (persists across renders)
-  const circlesPerCard = useRef<Record<number, Circle[]>>({})
+  // circles per card live in state so we re-render as soon as they exist
+  const [circles, setCircles] = useState<Circle[][] | null>(null)
 
-  // --- Server/skeleton: no random, no animation (avoids hydration issues) ---
-  if (!mounted) {
-    return (
-      <section className="w-full py-5 px-6 bg-white">
-        <h2 className="font-display font-bold mb-6 text-5xl">Erityisosaaminen</h2>
-        <ul className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
-          {skills.map((skill, i) => (
-            <li key={`${skill.title}-${i}`} className="group">
-              <div
-                className="relative flex items-center justify-center
-                           h-48 sm:h-56 md:h-[254px] w-full rounded-[.5rem] overflow-hidden
-                           text-white font-bold tracking-wide bg-black
-                           transform-gpu transition-transform duration-300
-                           group-hover:scale-[1.03] group-hover:shadow-lg"
-              >
-                <span className="font-display z-10 text-3xl px-6 text-center select-none">
-                  {skill.title}
-                </span>
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-[.5rem]
-                             bg-gradient-to-t from-transparent via-white/5 to-white/10 opacity-40"
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
+  useEffect(() => {
+    // generate once on mount (and when skills length changes)
+    const next: Circle[][] = skills.map(() => {
+      const count = Math.floor(r(3, 6))
+      return Array.from({length: count}).map(() => {
+        const base = PALETTE[Math.floor(r(0, PALETTE.length))]
+        const {h, s, l} = hexToHsl(base)
+        const dx = r(-60, 90)
+        const dy = r(-45, 70)
+        return {
+          x: r(10, 90),
+          y: r(10, 85),
+          size: r(70, 160),
+          color: hslToCss(h, jitter(s, 6), jitter(l, 8)),
+          blur: r(10, 26),
+          opacity: r(0.22, 0.4),
+          dur: r(8, 12),
+          delay: r(0, 2.5),
+          dx,
+          dy,
+          dx2: -0.6 * dx,
+          dy2: -0.6 * dy,
+        }
+      })
+    })
+    setCircles(next)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skills.length]) // changes only if count of cards changes
 
-  // --- Client: generate & render animated circles ---
   return (
-    <section className="w-full py-5 px-6 bg-white">
-      <h2 className="font-display font-bold mb-6 text-5xl">Erityisosaaminen</h2>
+    <section className="w-full py-10 px-4 bg-blue">
+      <h2 className="font-display text-white p-7 font-bold mb-6 text-4xl">Erityisosaaminen</h2>
 
-      <ul className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
+      <ul className="grid gap-4 grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
         {skills.map((skill, i) => {
-          if (!circlesPerCard.current[i]) {
-            const count = Math.floor(r(3, 6))
-            circlesPerCard.current[i] = Array.from({length: count}).map(() => {
-              const base = PALETTE[Math.floor(r(0, PALETTE.length))]
-              const {h, s, l} = hexToHsl(base)
-              const dx = r(-60, 90)
-              const dy = r(-45, 70)
-              return {
-                x: r(10, 90),
-                y: r(10, 85),
-                size: r(70, 160),
-                color: hslToCss(h, jitter(s, 6), jitter(l, 8)),
-                blur: r(10, 26),
-                opacity: r(0.22, 0.4),
-                dur: r(8, 12),
-                delay: r(0, 2.5),
-                dx,
-                dy,
-                dx2: -0.6 * dx,
-                dy2: -0.6 * dy,
-              }
-            })
-          }
-          const circles = circlesPerCard.current[i]
-
+          const cardCircles = circles?.[i] ?? [] // empty on very first paint (SSR), filled right after mount
           return (
-            <li key={`${skill.title}-${i}`} className="group">
+            <li key={`${skill.title}-${i}`} className="group pb-8 sm:pb-2">
               <div
                 className="relative flex items-center justify-center
-                           h-48 sm:h-56 md:h-[254px] w-full rounded-[.5rem] overflow-hidden
-                           text-black font-bold tracking-wide bg-white
-                           transition-transform duration-300"
+                           h-72 w-full rounded-[.5rem] overflow-hidden
+                           text-white font-bold tracking-wide"
               >
                 {/* Circles */}
                 <div className="absolute inset-0">
-                  {circles.map((c, idx) => (
+                  {cardCircles.map((c, idx) => (
                     <span
                       key={idx}
-                      className={`absolute rounded-full will-change-transform ${
-                        prefersReduced ? '' : 'anim-floatxy'
-                      }`}
+                      className={`absolute rounded-full will-change-transform ${prefersReduced ? '' : 'anim-floatxy'}`}
                       style={{
                         left: `${c.x}%`,
                         top: `${c.y}%`,
@@ -172,7 +143,7 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
                         background: c.color,
                         filter: `blur(${c.blur}px)`,
                         opacity: c.opacity,
-                        // animation vars read by .anim-floatxy
+                        // animation vars (your CSS reads these)
                         ['--dx' as any]: `${c.dx}px`,
                         ['--dy' as any]: `${c.dy}px`,
                         ['--dx2' as any]: `${c.dx2}px`,
@@ -189,7 +160,7 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
                   {skill.title}
                 </span>
 
-                {/* Glass */}
+                {/* Glossy overlay */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 rounded-[.5rem]

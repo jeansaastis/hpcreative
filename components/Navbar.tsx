@@ -28,7 +28,7 @@ export function Navbar({data}: NavbarProps) {
 
   return (
     <header
-      className="sticky top-0 z-10 flex items-center justify-between bg-white/80 backdrop-blur px-4 py-4 md:px-16 md:py-5 lg:px-32"
+      className="sticky top-0 z-20 flex items-center justify-between backdrop-blur px-4 py-4 md:px-16 md:py-5 lg:px-32"
       data-sanity={dataAttribute?.('menuItems')}
     >
       {/* Left menu */}
