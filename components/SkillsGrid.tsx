@@ -115,8 +115,8 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
   }, [skills.length]) // changes only if count of cards changes
 
   return (
-    <section className="w-full py-10 px-2 bg-blue">
-      <h2 className="font-display text-white p-7 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
+    <section className="w-full pt-2 pb-2 px-5 bg-blue">
+      <h2 className="font-display text-white pt-20 px-10 pb-5 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
         Erityisosaaminen
       </h2>
 
@@ -162,7 +162,7 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
                 </div>
 
                 {/* Label */}
-                <span className="font-display z-10 text-[clamp(1rem,4vw,1.75rem)] px-2 text-center select-none">
+                <span className="font-display z-10 text-[clamp(1.2rem,4vw,1.75rem)] px-2 text-center select-none">
                   {skill.title}
                 </span>
 

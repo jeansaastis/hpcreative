@@ -78,7 +78,8 @@ export const blogPostBySlugQuery = defineQuery(`
 export const settingsQuery = defineQuery(`
   *[_type == "settings"][0]{
     _id, _type, footer, linkedinUrl,
-    logo{ asset->{ url }, alt },
+    logoLight{ asset->{ url }, alt },
+    logoDark{ asset->{ url }, alt },
     menuItems[]{ _key, ...@->{ _type, "slug": slug.current, title } },
     ogImage
   }

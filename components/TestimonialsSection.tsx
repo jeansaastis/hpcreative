@@ -94,7 +94,7 @@ export default function TestimonialsSection({testimonials}: {testimonials: Testi
         </div>
       )}
 
-      <h2 className="font-display text-white p-7 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
+      <h2 className="font-display px-10 sm:pt-20 sm:pb-5 font-bold text-2xl sm:text-3xl md:text-4xl">
         HP:sta sanottua
       </h2>
 

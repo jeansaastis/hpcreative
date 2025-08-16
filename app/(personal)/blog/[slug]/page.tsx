@@ -23,9 +23,7 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
     params,
   })
 
-  if (!post?._id) {
-    notFound()
-  }
+  if (!post?._id) notFound()
 
   const dateLabel = post?.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('fi-FI', {
@@ -36,22 +34,39 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
     : null
 
   return (
-    <article className="mx-auto max-w-3xl px-4">
+    <article className="mx-auto max-w-3xl px-6 mb-12 py-5">
+      {/* Back link */}
+      <div className="mb-6">
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black"
+          aria-label="Takaisin blogiin"
+        >
+          <span aria-hidden>←</span>
+          Takaisin blogiin
+        </Link>
+      </div>
+
+      {/* Title + meta */}
       <header className="mb-6">
-        <h1 className="text-3xl font-bold">{post?.title || 'Untitled'}</h1>
+        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black">
+          {post?.title || 'Untitled'}
+        </h1>
+
         {(dateLabel || post?.publisher) && (
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-3 text-sm text-gray-500">
             {dateLabel}
             {dateLabel && post?.publisher && ' · '}
             {post?.publisher}
           </p>
         )}
+
         {post?.tags?.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {post.tags.map((t: string, i: number) => (
               <span
                 key={i}
-                className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700"
+                className="rounded-full border border-black/10 bg-black/[.03] px-3 py-1 text-xs font-medium text-gray-800"
               >
                 #{t}
               </span>
@@ -60,20 +75,33 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
         )}
       </header>
 
+      {/* Cover image */}
       {post?.coverImage && (
         <div className="mb-8">
           <ImageBox
             image={post.coverImage}
             alt={post.title || 'Cover image'}
-            classesWrapper="relative aspect-[16/9]"
+            classesWrapper="relative aspect-[16/9] overflow-hidden rounded-2xl ring-1 ring-black/10 shadow-sm bg-gray-50"
           />
         </div>
       )}
 
-      {post?.overview && <p className="mb-6 text-lg text-gray-700">{post.overview}</p>}
+      {/* Standfirst / overview */}
+      {post?.overview && (
+        <p className="mb-8 text-lg leading-relaxed text-gray-800">{post.overview}</p>
+      )}
 
+      {/* Body */}
       {post?.body && (
-        <div className="prose max-w-none">
+        <div
+          className="
+            prose prose-neutral max-w-none
+            prose-headings:font-display prose-headings:text-black
+            prose-p:text-gray-800 prose-a:text-black prose-a:underline hover:prose-a:opacity-80
+            prose-strong:text-black prose-blockquote:border-l-black/20
+            prose-img:rounded-xl prose-hr:my-10
+          "
+        >
           <CustomPortableText
             id={post._id}
             type={post._type}
@@ -83,15 +111,17 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
         </div>
       )}
 
+      {/* External link */}
       {post?.externalUrl && (
-        <p className="mt-8">
+        <p className="mt-10">
           <Link
             href={post.externalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 underline"
+            className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-black/[.03] px-4 py-2 text-sm font-medium text-black hover:bg-black/5"
           >
             Lue alkuperäinen artikkeli
+            <span aria-hidden>↗</span>
           </Link>
         </p>
       )}

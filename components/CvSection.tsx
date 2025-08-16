@@ -6,7 +6,7 @@ import {CustomPortableText} from './CustomPortableText'
 
 export default function CvSection({content, image}: {content: any[]; image?: {url: string}}) {
   return (
-    <section className="w-full py-12 px-6 bg-white">
+    <section className="w-full py-12 sm:px-6 bg-white">
       <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12">
         {/* CV card (left on desktop) */}
         <div className="order-2 md:order-1 relative z-10 md:-mr-24">

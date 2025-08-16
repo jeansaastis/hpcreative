@@ -52,17 +52,31 @@ export function Navbar({data}: NavbarProps) {
       </nav>
 
       {/* Center logo */}
-      {data?.logo?.asset?.url && (
-        <Link href="/" className="flex-shrink-0">
+      <Link href="/" className="flex-shrink-0" aria-label="Home">
+        {/* Shows on light theme / light backgrounds */}
+        {data.logoLight?.asset?.url && (
           <Image
-            src={data.logo.asset.url}
-            alt={data.logo.alt || 'Site logo'}
-            width={80}
-            height={80}
-            className="h-12 w-auto object-contain"
+            src={data.logoLight.asset.url}
+            alt={data.logoLight?.alt || 'Site logo'}
+            width={160}
+            height={160}
+            className="block h-16 w-auto object-contain dark:hidden"
+            priority
           />
-        </Link>
-      )}
+        )}
+
+        {/* Shows on dark theme / dark backgrounds */}
+        {data.logoDark?.asset?.url && (
+          <Image
+            src={data.logoDark.asset.url}
+            alt={data.logoDark?.alt || data.logoLight?.alt || 'Site logo'}
+            width={160}
+            height={160}
+            className="hidden h-16 w-auto object-contain dark:block"
+            priority
+          />
+        )}
+      </Link>
 
       {/* Right menu + socials */}
       <nav className="flex items-center gap-x-5">

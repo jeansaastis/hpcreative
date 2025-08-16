@@ -7,21 +7,18 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'logo',
-      title: 'Site Logo',
+      name: 'logoLight',
+      title: 'Logo (for light backgrounds)',
       type: 'image',
-      options: {
-        hotspot: true,
-      },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          description: 'Alternative text for accessibility',
-        },
-      ],
-      description: 'Optional. Will appear in the center of the navigation bar.',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', type: 'string', title: 'Alt text'})],
+    }),
+    defineField({
+      name: 'logoDark',
+      title: 'Logo (for dark backgrounds)',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', type: 'string', title: 'Alt text'})],
     }),
     defineField({
       name: 'linkedinUrl',

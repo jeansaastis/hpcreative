@@ -1,6 +1,5 @@
 import '@/styles/index.css'
 import {CustomPortableText} from '@/components/CustomPortableText'
-import {LinkedInIcon} from '@/components/icons/LinkedIn'
 import {Navbar} from '@/components/Navbar'
 import {sanityFetch, SanityLive} from '@/sanity/lib/live'
 import {homePageQuery, settingsQuery} from '@/sanity/lib/queries'
@@ -8,6 +7,7 @@ import {urlForOpenGraphImage} from '@/sanity/lib/utils'
 import type {Metadata, Viewport} from 'next'
 import {toPlainText, VisualEditing, type PortableTextBlock} from 'next-sanity'
 import {draftMode} from 'next/headers'
+import Image from 'next/image'
 import {Suspense} from 'react'
 import {Toaster} from 'sonner'
 import {handleError} from './client-functions'
@@ -23,6 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // @ts-expect-error - @TODO update @sanity/image-url types so it's compatible
     settings?.ogImage,
   )
+
   return {
     title: homePage?.title
       ? {
@@ -43,11 +44,17 @@ export const viewport: Viewport = {
 
 export default async function IndexRoute({children}: {children: React.ReactNode}) {
   const {data} = await sanityFetch({query: settingsQuery})
+
+  // Define logo URLs here (footer uses white-on-dark by preference)
+  const lightUrl = data?.logoLight?.asset?.url ?? null
+  const darkUrl = data?.logoDark?.asset?.url ?? null
+
   return (
     <>
       <div className="flex min-h-screen flex-col bg-white text-black">
         <Navbar data={data} />
         <div className="mt-20 flex-grow">{children}</div>
+
         <footer className="bottom-0 w-full bg-[#11171C] text-white py-12 md:py-20">
           <div className="mx-auto flex max-w-7xl flex-col md:flex-row items-start justify-between gap-10 px-6">
             {/* Left: contact info + LinkedIn */}
@@ -82,19 +89,23 @@ export default async function IndexRoute({children}: {children: React.ReactNode}
               )}
             </div>
 
-            {/* Right: logo */}
-            {data?.logo?.asset?.url && (
+            {/* Right: logo — prefer the white-on-dark (darkUrl), fallback to light */}
+            {(darkUrl || lightUrl) && (
               <div className="shrink-0">
-                <img
-                  src={data.logo.asset.url}
-                  alt={data.logo.alt || 'Logo'}
-                  className="h-12 w-auto object-contain"
+                <Image
+                  src={darkUrl ?? lightUrl!}
+                  alt={data?.logoDark?.alt || data?.logoLight?.alt || 'Site logo'}
+                  width={160}
+                  height={160}
+                  className="h-16 w-auto object-contain"
+                  priority
                 />
               </div>
             )}
           </div>
         </footer>
       </div>
+
       <Toaster />
       <SanityLive onError={handleError} />
       {(await draftMode()).isEnabled && (
