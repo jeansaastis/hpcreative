@@ -25,7 +25,7 @@ export default function ContactMe() {
   }
 
   return (
-    <div className="rounded-[0.5rem] border  bg-blue p-8 shadow-sm">
+    <div className="rounded-[0.5rem] border  bg-blue px-4 py-12 md:p-8 shadow-sm">
       <h3 className="mb-6 font-display text-3xl md:text-4xl font-bold text-white">Ota yhteyttä!</h3>
 
       <form onSubmit={onSubmit} className="space-y-5">

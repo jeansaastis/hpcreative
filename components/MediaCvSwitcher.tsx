@@ -17,7 +17,7 @@ export default function MediaCvSwitcher({
   const isMedia = activeTab === 'media'
 
   return (
-    <section className="w-full pt-5 sm:pt-20 px-6 bg-white">
+    <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-white">
       {/* Accessible, slider-style title control */}
       <div className="mb-6 flex justify-center">
         <div
@@ -74,7 +74,7 @@ export default function MediaCvSwitcher({
           }`}
         >
           {Array.isArray(mediaGallery) && mediaGallery.length > 0 && (
-            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 pl-0 ml-0 list-none">
               {mediaGallery.map((item, idx) => {
                 const card = (
                   <>

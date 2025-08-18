@@ -8,7 +8,7 @@ export default function HeroSection({data}: {data: any}) {
   const {title, body, image} = data
 
   return (
-    <section className="w-full py-5 px-6 bg-white">
+    <section className="w-full py-5 px-3 md:px-10 bg-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
         {/* Image */}
         {image?.asset?.url && (

@@ -34,7 +34,7 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
     : null
 
   return (
-    <article className="mx-auto max-w-3xl px-6 mb-12 py-5">
+    <article className="mx-auto max-w-4xl px-6 mb-12 py-5">
       {/* Back link */}
       <div className="mb-6">
         <Link
@@ -47,42 +47,63 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
         </Link>
       </div>
 
-      {/* Title + meta */}
-      <header className="mb-6">
-        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black">
-          {post?.title || 'Untitled'}
-        </h1>
-
-        {(dateLabel || post?.publisher) && (
-          <p className="mt-3 text-sm text-gray-500">
-            {dateLabel}
-            {dateLabel && post?.publisher && ' · '}
-            {post?.publisher}
-          </p>
-        )}
-
-        {post?.tags?.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {post.tags.map((t: string, i: number) => (
-              <span
-                key={i}
-                className="rounded-full border border-black/10 bg-black/[.03] px-3 py-1 text-xs font-medium text-gray-800"
-              >
-                #{t}
-              </span>
-            ))}
+      {/* Hero: title over image if present, otherwise centered title */}
+      {post?.coverImage ? (
+        <section className="relative mb-8">
+          {/* Image */}
+          <div className="overflow-hidden rounded-2xl ring-1 ring-black/10 bg-gray-50">
+            <ImageBox
+              image={post.coverImage}
+              alt={post.title || 'Cover image'}
+              classesWrapper="relative aspect-[16/9]"
+            />
           </div>
-        )}
-      </header>
 
-      {/* Cover image */}
-      {post?.coverImage && (
-        <div className="mb-8">
-          <ImageBox
-            image={post.coverImage}
-            alt={post.title || 'Cover image'}
-            classesWrapper="relative aspect-[16/9] overflow-hidden rounded-2xl ring-1 ring-black/10 shadow-sm bg-gray-50"
-          />
+          {/* Overlay gradient + title/meta */}
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute inset-0 flex items-end justify-center p-6 sm:p-10">
+              <div className="text-center">
+                <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white drop-shadow">
+                  {post?.title || 'Untitled'}
+                </h1>
+                {(dateLabel || post?.publisher) && (
+                  <p className="mt-3 text-sm text-white/80">
+                    {dateLabel}
+                    {dateLabel && post?.publisher && ' · '}
+                    {post?.publisher}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <header className="mb-6 text-center">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black">
+            {post?.title || 'Untitled'}
+          </h1>
+          {(dateLabel || post?.publisher) && (
+            <p className="mt-3 text-sm text-gray-500">
+              {dateLabel}
+              {dateLabel && post?.publisher && ' · '}
+              {post?.publisher}
+            </p>
+          )}
+        </header>
+      )}
+
+      {/* Tags (shown below hero either way) */}
+      {post?.tags?.length > 0 && (
+        <div className="mb-6 flex flex-wrap justify-center gap-2">
+          {post.tags.map((t: string, i: number) => (
+            <span
+              key={i}
+              className="rounded-full border border-black/10 bg-black/[.03] px-3 py-1 text-xs font-medium text-gray-800"
+            >
+              #{t}
+            </span>
+          ))}
         </div>
       )}
 
@@ -95,12 +116,12 @@ export default async function BlogPostPage({params}: {params: {slug: string}}) {
       {post?.body && (
         <div
           className="
-            prose prose-neutral max-w-none
-            prose-headings:font-display prose-headings:text-black
-            prose-p:text-gray-800 prose-a:text-black prose-a:underline hover:prose-a:opacity-80
-            prose-strong:text-black prose-blockquote:border-l-black/20
-            prose-img:rounded-xl prose-hr:my-10
-          "
+        prose prose-neutral max-w-none
+        prose-headings:font-display prose-headings:text-black
+        prose-p:text-gray-800 prose-a:text-black prose-a:underline hover:prose-a:opacity-80
+        prose-strong:text-black prose-blockquote:border-l-black/20
+        prose-img:rounded-xl prose-hr:my-10
+      "
         >
           <CustomPortableText
             id={post._id}

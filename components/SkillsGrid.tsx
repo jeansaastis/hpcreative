@@ -115,10 +115,8 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
   }, [skills.length]) // changes only if count of cards changes
 
   return (
-    <section className="w-full pt-2 pb-2 px-5 bg-blue">
-      <h2 className="font-display text-white pt-20 px-10 pb-5 font-bold mb-6 text-2xl sm:text-3xl md:text-4xl">
-        Erityisosaaminen
-      </h2>
+    <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-blue">
+      <h2 className="hp-h2 hp-h2--light hp-h2--left">Erityisosaaminen</h2>
 
       <ul className="grid gap-2 sm:gap-4 grid-cols-2 m-0 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
         {skills.map((skill, i) => {

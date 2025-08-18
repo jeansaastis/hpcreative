@@ -53,7 +53,7 @@ export default async function IndexRoute({children}: {children: React.ReactNode}
     <>
       <div className="flex min-h-screen flex-col bg-white text-black">
         <Navbar data={data} />
-        <div className="mt-20 flex-grow">{children}</div>
+        <div className="md:mt-20 flex-grow">{children}</div>
 
         <footer className="bottom-0 w-full bg-[#11171C] text-white py-12 md:py-20">
           <div className="mx-auto flex max-w-7xl flex-col md:flex-row items-start justify-between gap-10 px-6">

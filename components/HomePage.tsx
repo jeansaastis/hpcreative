@@ -56,19 +56,16 @@ export async function HomePage({data}: HomePageProps) {
 
       {/* Blog */}
       {blogPosts.length > 0 && (
-        <section className="w-full bg-white py-10 px-6">
-          <div className="mx-auto max-w-7xl">
-            <h2
-              id="blogi-heading"
-              className="font-display sm:pt-20 sm:pb-5 font-bold text-2xl sm:text-3xl md:text-4xl"
-            >
+        <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-white">
+          <div className="w-full">
+            <h2 id="blogi-heading" className="text-blue hp-h2 hp-h2--light hp-h2--left">
               Blogi
             </h2>
 
             <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-16">
               {/* Left: latest 1–2 posts */}
               <div className="lg:col-span-7">
-                <ul className="grid gap-6 sm:grid-cols-2">
+                <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2 pl-0 ml-0 list-none">
                   {blogPosts.slice(0, 2).map((post: any) => (
                     <li key={post._id || post._key}>
                       <BlogCard post={post} />

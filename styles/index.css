@@ -125,3 +125,22 @@ ol {
   will-change: transform;
   animation: floatxy var(--dur, 12s) ease-in-out var(--delay, 0s) infinite;
 }
+
+@layer components {
+  /* Uniform section H2 */
+  .hp-h2 {
+    @apply mb-6 font-display text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl;
+  }
+  .hp-h2--dark {
+    @apply text-black;
+  }
+  .hp-h2--light {
+    @apply text-white;
+  }
+  .hp-h2--left {
+    @apply text-left;
+  }
+  .hp-h2--center {
+    @apply text-center;
+  }
+}
