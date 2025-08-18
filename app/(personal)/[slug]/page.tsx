@@ -7,24 +7,19 @@ import {toPlainText, type PortableTextBlock} from 'next-sanity'
 import {draftMode} from 'next/headers'
 import {notFound} from 'next/navigation'
 
-type Props = {
-  params: Promise<{slug: string}>
-}
+// 👇 Reserve slugs that have their own top-level routes
+const RESERVED = new Set(['blog'])
 
+type Params = {slug: string}
+
+// (optional) if you’re using page-level metadata
 export async function generateMetadata(
-  {params}: Props,
-  parent: ResolvingMetadata,
+  {params}: {params: Params},
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const {data: page} = await sanityFetch({
-    query: pagesBySlugQuery,
-    params,
-    stega: false,
-  })
-
-  return {
-    title: page?.title,
-    description: page?.overview ? toPlainText(page.overview) : (await parent).description,
-  }
+  if (RESERVED.has(params.slug)) return {}
+  // ...your existing metadata logic (if any)
+  return {}
 }
 
 export async function generateStaticParams() {
@@ -34,42 +29,56 @@ export async function generateStaticParams() {
     stega: false,
     perspective: 'published',
   })
-  return data
+
+  // data looks like: [{ slug: 'about' }, { slug: 'blog' }, ...]
+  return (data || [])
+    .filter((d: any) => d?.slug && !RESERVED.has(d.slug))
+    .map((d: any) => ({slug: d.slug}))
 }
 
-export default async function PageSlugRoute({params}: Props) {
-  const {data} = await sanityFetch({query: pagesBySlugQuery, params})
+export default async function PageSlugRoute({params}: {params: Params}) {
+  const {slug} = params
 
-  // Only show the 404 page if we're in production, when in draft mode we might be about to create a page on this slug, and live reload won't work on the 404 route
-  if (!data?._id && !(await draftMode()).isEnabled) {
+  if (RESERVED.has(slug)) {
+    // Ensure /blog is never handled here
     notFound()
   }
 
-  const {body, overview, title} = data ?? {}
+  const {data} = await sanityFetch({
+    query: pagesBySlugQuery,
+    params: {slug},
+  })
+
+  if (!data?._id) {
+    notFound()
+  }
+
+  const {title, overview, body} = data || {}
 
   return (
-    <div>
-      <div className="mb-14">
-        {/* Header */}
-        <Header
-          id={data?._id || null}
-          type={data?._type || null}
-          path={['overview']}
-          title={title || (data?._id ? 'Untitled' : '404 Page Not Found')}
-          description={overview}
-        />
-
-        {/* Body */}
-        {body && (
+    <div className="relative mx-auto max-w-7xl px-6 py-16 bg-white">
+      {title && <Header id={data._id} type={data._type} path={[]} title={title} centered />}
+      {overview && (
+        <div className="mt-6 max-w-3xl text-gray-700 text-lg">
           <CustomPortableText
-            id={data?._id || null}
-            type={data?._type || null}
+            id={data._id}
+            type={data._type}
+            path={['overview']}
+            value={overview as unknown as PortableTextBlock[]}
+          />
+        </div>
+      )}
+      {body && (
+        <div className="mt-8">
+          <CustomPortableText
+            id={data._id}
+            type={data._type}
             path={['body']}
             paragraphClasses="font-serif max-w-3xl text-gray-600 text-xl"
             value={body as unknown as PortableTextBlock[]}
           />
-        )}
-      </div>
+        </div>
+      )}
       <div className="absolute left-0 w-screen border-t" />
     </div>
   )

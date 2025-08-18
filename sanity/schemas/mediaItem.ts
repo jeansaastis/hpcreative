@@ -28,6 +28,7 @@ export default defineType({
       description: 'Optional link for this media item (external or internal)',
     }),
   ],
+  readOnly: false,
   preview: {
     select: {
       title: 'title',
