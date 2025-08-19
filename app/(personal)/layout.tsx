@@ -1,6 +1,7 @@
 import '@/styles/index.css'
 import {CustomPortableText} from '@/components/CustomPortableText'
 import {Navbar} from '@/components/Navbar'
+import PageTransition from '@/components/PageTransition'
 import {sanityFetch, SanityLive} from '@/sanity/lib/live'
 import {homePageQuery, settingsQuery} from '@/sanity/lib/queries'
 import {urlForOpenGraphImage} from '@/sanity/lib/utils'
@@ -8,7 +9,6 @@ import type {Metadata, Viewport} from 'next'
 import {toPlainText, VisualEditing, type PortableTextBlock} from 'next-sanity'
 import {draftMode} from 'next/headers'
 import Image from 'next/image'
-import {Suspense} from 'react'
 import {Toaster} from 'sonner'
 import {handleError} from './client-functions'
 import {DraftModeToast} from './DraftModeToast'
@@ -20,44 +20,36 @@ export async function generateMetadata(): Promise<Metadata> {
   ])
 
   const ogImage = urlForOpenGraphImage(
-    // @ts-expect-error - @TODO update @sanity/image-url types so it's compatible
+    // @ts-expect-error
     settings?.ogImage,
   )
 
   return {
     title: homePage?.title
-      ? {
-          template: `%s | ${homePage.title}`,
-          default: homePage.title || 'Personal website',
-        }
+      ? {template: `%s | ${homePage.title}`, default: homePage.title || 'Personal website'}
       : undefined,
     description: homePage?.overview ? toPlainText(homePage.overview) : undefined,
-    openGraph: {
-      images: ogImage ? [ogImage] : [],
-    },
+    openGraph: {images: ogImage ? [ogImage] : []},
   }
 }
 
-export const viewport: Viewport = {
-  themeColor: '#000',
-}
+export const viewport: Viewport = {themeColor: '#000'}
 
 export default async function IndexRoute({children}: {children: React.ReactNode}) {
   const {data} = await sanityFetch({query: settingsQuery})
-
-  // Define logo URLs here (footer uses white-on-dark by preference)
   const lightUrl = data?.logoLight?.asset?.url ?? null
   const darkUrl = data?.logoDark?.asset?.url ?? null
 
   return (
     <>
       <div className="flex min-h-screen flex-col bg-white text-black">
+        {/* overlay sits above everything (but below modals you may set with higher z-index) */}
+        <PageTransition />
         <Navbar data={data} />
+        {/* keep this wrapper stable & un-keyed so it doesn't remount */}
         <div className="md:mt-20 flex-grow">{children}</div>
-
         <footer className="bottom-0 w-full bg-[#11171C] text-white py-12 md:py-20">
           <div className="mx-auto flex max-w-7xl flex-col md:flex-row items-start justify-between gap-10 px-6">
-            {/* Left: contact info + LinkedIn */}
             <div className="space-y-4">
               {data?.footer && (
                 <CustomPortableText
@@ -68,7 +60,6 @@ export default async function IndexRoute({children}: {children: React.ReactNode}
                   value={data.footer as unknown as PortableTextBlock[]}
                 />
               )}
-
               {data?.linkedinUrl && (
                 <a
                   href={data.linkedinUrl}
@@ -89,7 +80,6 @@ export default async function IndexRoute({children}: {children: React.ReactNode}
               )}
             </div>
 
-            {/* Right: logo — prefer the white-on-dark (darkUrl), fallback to light */}
             {(darkUrl || lightUrl) && (
               <div className="shrink-0">
                 <Image

@@ -25,7 +25,7 @@ export default function ContactMe() {
   }
 
   return (
-    <div className="rounded-[0.5rem] border  bg-blue px-4 py-12 md:p-8 shadow-sm">
+    <div className="rounded-[0.5rem] border  bg-blue px-3 py-6 md:py-12 md:p-8 shadow-sm">
       <h3 className="text-blue hp-h2 hp-h2--light hp-h2--left p-4 md:p-4 text-white">
         Ota yhteyttä!
       </h3>

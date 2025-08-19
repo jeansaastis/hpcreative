@@ -75,7 +75,7 @@ export default function MediaCvSwitcher({
           id="panel-media"
           role="tabpanel"
           aria-labelledby="tab-media"
-          className={`py-10 transition-opacity duration-300 ${
+          className={`md:py-10 transition-opacity duration-300 ${
             isMedia ? 'opacity-100' : 'opacity-0 pointer-events-none absolute inset-0'
           }`}
         >

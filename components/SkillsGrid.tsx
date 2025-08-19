@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 
 const PALETTE = ['#11171C', '#020202', '#1B2730', '#048A81', '#1B2730']
 
@@ -60,7 +60,7 @@ type Circle = {
 }
 
 export default function SkillsGrid({skills}: {skills: Skill[]}) {
-  // respects prefers-reduced-motion
+  // motion preference
   const prefersReduced = useMemo(
     () =>
       typeof window !== 'undefined' &&
@@ -113,18 +113,85 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skills.length])
 
+  // --- Scroll reveal (Anime.js v4) ---
+  const gridRef = useRef<HTMLUListElement | null>(null)
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]) // one ref per card
+
+  useEffect(() => {
+    if (prefersReduced) return
+    const grid = gridRef.current
+    if (!grid) return
+
+    // set initial hidden state
+    cardRefs.current.forEach((el) => {
+      if (!el) return
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(16px)'
+      el.style.willChange = 'opacity, transform'
+    })
+
+    let done = false
+    let cleanupIO: (() => void) | null = null
+    let inst: any
+
+    const setup = async () => {
+      const {animate, stagger} = await import('animejs')
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (done) return
+          const visible = entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.15)
+          if (!visible) return
+
+          const targets = cardRefs.current.filter(Boolean) as HTMLElement[]
+          if (!targets.length) return
+
+          inst = animate(targets, {
+            opacity: {from: 0, to: 1},
+            delay: stagger(120, {from: 'first'}),
+            duration: 1500,
+            easing: 'easeOutQuad',
+            autoplay: true,
+            complete: () => {
+              // clean inline hints
+              targets.forEach((el) => (el.style.willChange = 'auto'))
+            },
+          })
+
+          done = true
+          io.disconnect()
+        },
+        {root: null, threshold: [0, 0.15, 0.5], rootMargin: '0px 0px -10% 0px'},
+      )
+
+      io.observe(grid)
+      cleanupIO = () => io.disconnect()
+    }
+
+    setup()
+
+    return () => {
+      try {
+        cleanupIO?.()
+        inst?.cancel?.()
+      } catch {}
+    }
+  }, [prefersReduced, skills.length])
+
   return (
     <section className="relative z-0 w-full p-5 sm:pt-20 px-3 md:px-10 mt-0 bg-blue">
-      {/* (SVG removed) */}
-
       <h2 className="relative z-10 hp-h2 hp-h2--light hp-h2--left p-5">Erityisosaaminen</h2>
 
-      <ul className="grid gap-2 sm:gap-4 grid-cols-2 m-0 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
+      <ul
+        ref={gridRef}
+        className="grid gap-2 sm:gap-4 grid-cols-2 m-0 sm:grid-cols-3 lg:grid-cols-5 min-w-0"
+      >
         {skills.map((skill, i) => {
           const cardCircles = circles?.[i] ?? []
           return (
             <li key={`${skill.title}-${i}`} className="group pb-0 sm:pb-8">
               <div
+                ref={(el) => (cardRefs.current[i] = el)}
                 className="
                   relative flex items-center justify-center
                   aspect-[4/5] sm:aspect-[4/5] md:aspect-[4/5]

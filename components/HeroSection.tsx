@@ -10,7 +10,7 @@ export default function HeroSection({data}: {data: any}) {
   const {title, body, image} = data
 
   return (
-    <section className="relative w-full z-10 pt-5 md:pt-20 min-h-[100svh] md:-mt-20 pb-8 px-3 md:px-10 bg-transparent">
+    <section className="relative w-full z-10 pt-5 pb-12 md:pt-20 min-h-[100svh] md:-mt-20 px-5 md:px-10 bg-transparent">
       <MatterBackground />
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
         {/* Image */}
@@ -22,9 +22,9 @@ export default function HeroSection({data}: {data: any}) {
               fill
               priority
               sizes="(min-width: 1024px) 60vw, (min-width: 768px) 60vw, 100vw"
-              className="object-cover rounded-[.5rem] z-0"
+              className="object-cover rounded-t-[.5rem] md:rounded-[.5rem] z-0"
             />
-            <div className="absolute inset-0 rounded-[.5rem] bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
+            <div className="absolute inset-0 rounded-t-[.5rem] md:rounded-[.5rem] bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
           </div>
         )}
 

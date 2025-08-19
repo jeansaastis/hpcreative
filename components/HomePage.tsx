@@ -59,7 +59,7 @@ export async function HomePage({data}: HomePageProps) {
         <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-white">
           <div className="w-full">
             <h2 id="blogi-heading" className="text-blue hp-h2 hp-h2--light hp-h2--left p-5">
-              Blogi
+              Blogi — uusimmat
             </h2>
 
             <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-16">

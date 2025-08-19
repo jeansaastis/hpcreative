@@ -124,7 +124,7 @@ function RevealCard({title, children}: {title: string; children: React.ReactNode
   return (
     <div
       ref={cardRef}
-      className="relative rounded-[.5rem] p-5 md:p-20 bg-white shadow-[rgba(0,0,0,0.08)_0px_6px_18px] overflow-hidden"
+      className="relative rounded-b-[.5rem] md:rounded-[.5rem] p-5 md:p-20 bg-white/50 backdrop-blur-lg shadow-[rgba(0,0,0,0.08)_0px_6px_18px] overflow-hidden"
     >
       <h1
         ref={titleRef}
