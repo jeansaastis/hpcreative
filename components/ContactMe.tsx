@@ -26,7 +26,9 @@ export default function ContactMe() {
 
   return (
     <div className="rounded-[0.5rem] border  bg-blue px-4 py-12 md:p-8 shadow-sm">
-      <h3 className="mb-6 font-display text-3xl md:text-4xl font-bold text-white">Ota yhteyttä!</h3>
+      <h3 className="text-blue hp-h2 hp-h2--light hp-h2--left p-4 md:p-4 text-white">
+        Ota yhteyttä!
+      </h3>
 
       <form onSubmit={onSubmit} className="space-y-5">
         {/* Honeypot (spam trap) */}
@@ -77,7 +79,7 @@ export default function ContactMe() {
         <button
           type="submit"
           disabled={status === 'pending'}
-          className="w-full rounded-[0.5rem] bg-[#11171C] px-5 py-3 font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
+          className="w-full rounded-[0.5rem] bg-[#11171C] px-5 py-3 font-semibold text-white transition hover:bg-white hover:text-blue disabled:opacity-60"
         >
           {status === 'pending' ? 'Lähetetään…' : 'Lähetä'}
         </button>

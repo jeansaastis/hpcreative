@@ -26,9 +26,12 @@ export function Navbar({data}: NavbarProps) {
   const leftItems = data.menuItems?.slice(0, half) || []
   const rightItems = data.menuItems?.slice(half) || []
 
+  const logoUrl = data?.logoLight?.asset?.url ?? null
+  const logoAlt = data?.logoLight?.alt || data?.logoDark?.alt || 'Site logo'
+
   return (
     <header
-      className="sticky top-0 z-20 flex items-center justify-between backdrop-blur-sm px-4 py-4 md:px-16 md:py-5 lg:px-32"
+      className="sticky top-0 z-20 flex items-center justify-between bg-white/90 backdrop-blur-sm px-4 py-4 md:px-16 md:py-5 lg:px-32"
       data-sanity={dataAttribute?.('menuItems')}
     >
       {/* Left menu */}
@@ -51,30 +54,19 @@ export function Navbar({data}: NavbarProps) {
         })}
       </nav>
 
-      {/* Center logo */}
+      {/* Center logo (always the same) */}
       <Link href="/" className="flex-shrink-0" aria-label="Home">
-        {/* Shows on light theme / light backgrounds */}
-        {data.logoLight?.asset?.url && (
+        {logoUrl ? (
           <Image
-            src={data.logoLight.asset.url}
-            alt={data.logoLight?.alt || 'Site logo'}
+            src={logoUrl}
+            alt={logoAlt}
             width={160}
             height={160}
-            className="block h-16 w-auto object-contain dark:hidden"
+            className="block h-16 w-auto object-contain"
             priority
           />
-        )}
-
-        {/* Shows on dark theme / dark backgrounds */}
-        {data.logoDark?.asset?.url && (
-          <Image
-            src={data.logoDark.asset.url}
-            alt={data.logoDark?.alt || data.logoLight?.alt || 'Site logo'}
-            width={160}
-            height={160}
-            className="hidden h-16 w-auto object-contain dark:block"
-            priority
-          />
+        ) : (
+          <span className="text-xl font-extrabold">Home</span>
         )}
       </Link>
 

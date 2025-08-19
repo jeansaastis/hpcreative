@@ -129,7 +129,7 @@ ol {
 @layer components {
   /* Uniform section H2 */
   .hp-h2 {
-    @apply mb-6 font-display text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl;
+    @apply mb-6 font-display text-2xl font-bold tracking-tight md:text-4xl;
   }
   .hp-h2--dark {
     @apply text-black;

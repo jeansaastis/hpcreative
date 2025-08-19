@@ -65,7 +65,7 @@ export default function TestimonialsSection({testimonials}: {testimonials: Testi
   if (!Array.isArray(testimonials) || testimonials.length === 0) return null
 
   return (
-    <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-blue relative overflow-hidden">
+    <section className="w-full py-10 px-3 md:px-10 md:pb-20 bg-blue relative overflow-hidden">
       {/* Floating circles background */}
       {mounted && (
         <div className="absolute inset-0 pointer-events-none">
@@ -94,7 +94,7 @@ export default function TestimonialsSection({testimonials}: {testimonials: Testi
         </div>
       )}
 
-      <h2 className="hp-h2 hp-h2--light hp-h2--left">HP:sta sanottua</h2>
+      <h2 className="hp-h2 hp-h2--light hp-h2--left p-5">HP:sta sanottua</h2>
 
       <ul className="grid gap-6 sm:grid-cols-3 lg:grid-cols-4 relative z-5">
         {testimonials.map((t, idx) => {

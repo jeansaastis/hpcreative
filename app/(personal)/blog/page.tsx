@@ -28,7 +28,7 @@ export default async function BlogIndexPage() {
         </div>
       )}
 
-      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 pl-0 ml-0 list-none">
         {posts?.map((post: any) => (
           <li key={post._id}>
             <BlogCard post={post} />

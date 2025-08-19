@@ -25,7 +25,7 @@ export default function MediaCvSwitcher({
           aria-label="Mediassa / CV"
           className="relative inline-grid grid-cols-2 rounded-[.5rem]"
         >
-          {/* The sliding thumb (behind the labels) */}
+          {/* Sliding thumb */}
           <span
             aria-hidden
             className="pointer-events-none absolute inset-y-0 left-0 w-1/2 m-1 rounded-[.35rem] bg-blue transition-transform duration-700 ease-in-out will-change-transform"
@@ -39,9 +39,12 @@ export default function MediaCvSwitcher({
             aria-controls="panel-media"
             id="tab-media"
             onClick={() => setActiveTab('media')}
-            className={`font-display relative uppercase z-10 px-10 py-6 text-md font-semibold transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
-              isMedia ? 'text-white' : 'text-black'
-            }`}
+            className={`hp-h2 mb-0 font-display relative z-10
+                  flex items-center justify-center
+                  px-8 py-6 font-bold tracking-tight
+                  transition-colors duration-500 focus:outline-none
+                  focus-visible:ring-2 focus-visible:ring-black
+                  ${isMedia ? 'text-white' : 'text-black'}`}
           >
             Mediassa
           </button>
@@ -53,9 +56,12 @@ export default function MediaCvSwitcher({
             aria-controls="panel-cv"
             id="tab-cv"
             onClick={() => setActiveTab('cv')}
-            className={`relative z-10 px-10 py-3 text-md font-semibold transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
-              !isMedia ? 'text-white' : 'text-black'
-            }`}
+            className={`hp-h2 mb-0 font-display relative z-10
+                  flex items-center justify-center
+                  px-8 py-6 font-bold tracking-tight
+                  transition-colors duration-500 focus:outline-none
+                  focus-visible:ring-2 focus-visible:ring-black
+                  ${!isMedia ? 'text-white' : 'text-black'}`}
           >
             CV
           </button>

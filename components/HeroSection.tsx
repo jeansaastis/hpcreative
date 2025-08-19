@@ -2,49 +2,39 @@
 
 import Image from 'next/image'
 import {CustomPortableText} from './CustomPortableText'
+import MatterBackground from './MatterBackground'
+import RevealCard from './RevealCard'
 
 export default function HeroSection({data}: {data: any}) {
   if (!data) return null
   const {title, body, image} = data
 
   return (
-    <section className="w-full py-5 px-3 md:px-10 bg-white">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+    <section className="relative w-full z-10 pt-5 md:pt-20 min-h-[100svh] md:-mt-20 pb-8 px-3 md:px-10 bg-transparent">
+      <MatterBackground />
+      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
         {/* Image */}
         {image?.asset?.url && (
-          <div className="relative w-full h-[420px] md:h-[680px]">
+          <div className="relative w-full aspect-[1/1] sm:aspect-[1/1] md:h-[640px]">
             <Image
               src={image.asset.url}
               alt={title || 'Hero image'}
               fill
               priority
               sizes="(min-width: 1024px) 60vw, (min-width: 768px) 60vw, 100vw"
-              className="object-cover rounded-[.5rem]"
+              className="object-cover rounded-[.5rem] z-0"
             />
             <div className="absolute inset-0 rounded-[.5rem] bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
           </div>
         )}
 
-        <div className="relative z-5 md:mt-0 md:-ml-24">
-          <div className="relative rounded-[.5rem] p-5 md:p-20 bg-white backdrop-blur-sm shadow-[rgba(0,0,0,0.08)_0px_6px_18px] overflow-hidden">
-            {title && (
-              <h1 className="font-display text-blue font-bold mb-4 text-4xl md:text-5xl">
-                {title}
-              </h1>
-            )}
-            {body && <CustomPortableText id={null} type={null} path={[]} value={body} />}
-
-            {/* glossy sheen */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[.5rem] bg-gradient-to-t from-transparent via-white/15 to-white/40"
-            />
-            {/* soft diagonal streak */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -inset-y-1/2 -left-1/3 w-2/3 rotate-12 rounded-[1rem] bg-gradient-to-r from-transparent via-white/25 to-transparent"
-            />
-          </div>
+        {/* Card */}
+        <div className="relative -mt-6 sm:-mt-6 md:mt-0 md:-ml-24 z-10">
+          {title && body && (
+            <RevealCard title={title}>
+              <CustomPortableText id={null} type={null} path={[]} value={body} />
+            </RevealCard>
+          )}
         </div>
       </div>
     </section>

@@ -4,8 +4,9 @@ const {theme} = require('@sanity/demo/tailwind')
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './sanity/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     ...theme,
@@ -22,5 +23,9 @@ module.exports = {
       display: ['var(--font-display)', 'var(--font-sans)'], // Antonio
     },
   },
+  safelist: [
+    {pattern: /^(p|pt|pb|py)-(0|2|3|4|5|6|8|10|12|16|20)$/},
+    {pattern: /^sm:(p|pt|pb|py)-(8|10|20)$/},
+  ],
   plugins: [require('@tailwindcss/typography')],
 }

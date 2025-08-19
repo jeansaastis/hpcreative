@@ -18,8 +18,8 @@ function hexToHsl(hex: string) {
   const b = (int & 255) / 255
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
-  let h = 0
-  let s = 0
+  let h = 0,
+    s = 0
   const l = (max + min) / 2
   const d = max - min
   if (d !== 0) {
@@ -60,7 +60,7 @@ type Circle = {
 }
 
 export default function SkillsGrid({skills}: {skills: Skill[]}) {
-  // read prefers-reduced-motion on client (stable via useMemo)
+  // respects prefers-reduced-motion
   const prefersReduced = useMemo(
     () =>
       typeof window !== 'undefined' &&
@@ -68,7 +68,7 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
     [],
   )
 
-  // crypto RNG (stable function)
+  // crypto RNG
   const rnd = useMemo(() => {
     const buf = new Uint32Array(1)
     return () => {
@@ -82,11 +82,10 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
   }, [])
   const r = (min: number, max: number) => min + (max - min) * rnd()
 
-  // circles per card live in state so we re-render as soon as they exist
+  // circles per card
   const [circles, setCircles] = useState<Circle[][] | null>(null)
 
   useEffect(() => {
-    // generate once on mount (and when skills length changes)
     const next: Circle[][] = skills.map(() => {
       const count = Math.floor(r(3, 6))
       return Array.from({length: count}).map(() => {
@@ -112,15 +111,17 @@ export default function SkillsGrid({skills}: {skills: Skill[]}) {
     })
     setCircles(next)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skills.length]) // changes only if count of cards changes
+  }, [skills.length])
 
   return (
-    <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-blue">
-      <h2 className="hp-h2 hp-h2--light hp-h2--left">Erityisosaaminen</h2>
+    <section className="relative z-0 w-full p-5 sm:pt-20 px-3 md:px-10 mt-0 bg-blue">
+      {/* (SVG removed) */}
+
+      <h2 className="relative z-10 hp-h2 hp-h2--light hp-h2--left p-5">Erityisosaaminen</h2>
 
       <ul className="grid gap-2 sm:gap-4 grid-cols-2 m-0 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
         {skills.map((skill, i) => {
-          const cardCircles = circles?.[i] ?? [] // empty on very first paint (SSR), filled right after mount
+          const cardCircles = circles?.[i] ?? []
           return (
             <li key={`${skill.title}-${i}`} className="group pb-0 sm:pb-8">
               <div
