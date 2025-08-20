@@ -1,9 +1,29 @@
-// ensure not Edge
-
+import {NextResponse} from 'next/server'
 import nodemailer from 'nodemailer'
 
 // app/api/contact/route.ts
 export const runtime = 'nodejs'
+
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST, // e.g. in-v3.mailjet.com
+  port: Number(process.env.EMAIL_PORT || 587),
+  secure: false, // STARTTLS on 587
+  auth: {
+    user: process.env.EMAIL_USER, // Mailjet API Key
+    pass: process.env.EMAIL_PASS, // Mailjet Secret Key
+  },
+})
+
+function escapeHtml(str: string) {
+  return str.replace(
+    /[&<>"']/g,
+    (m) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'})[m] as string,
+  )
+}
+
+function isEmail(v: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+}
 
 export async function POST(req: Request) {
   try {
@@ -13,24 +33,24 @@ export async function POST(req: Request) {
     const message = ((form.get('message') as string) || '').trim()
     const company = ((form.get('company') as string) || '').trim() // honeypot
 
-    if (company) return Response.json({ok: true}) // spam trap
+    // Honeypot — pretend success so bots don't learn
+    if (company) return NextResponse.json({ok: true})
 
     if (!name || !email || !message) {
-      return Response.json({ok: false, message: 'Puuttuvia tietoja.'}, {status: 400})
+      return NextResponse.json({ok: false, message: 'Puuttuvia tietoja.'}, {status: 400})
+    }
+    if (!isEmail(email)) {
+      return NextResponse.json({ok: false, message: 'Sähköpostiosoite ei kelpaa.'}, {status: 400})
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST, // in-v3.mailjet.com
-      port: Number(process.env.EMAIL_PORT), // 587
-      secure: false, // STARTTLS
-      auth: {
-        user: process.env.EMAIL_USER, // Mailjet API Key
-        pass: process.env.EMAIL_PASS, // Mailjet Secret Key
-      },
-    })
-
-    const to = process.env.CONTACT_TO!
-    const from = process.env.EMAIL_FROM! // must be a verified sender/domain in Mailjet
+    const to = process.env.CONTACT_TO || process.env.EMAIL_USER
+    const from = process.env.EMAIL_FROM // must be a verified sender/domain in Mailjet
+    if (!to || !from) {
+      return NextResponse.json(
+        {ok: false, message: 'Sähköpostiasetukset puuttuvat.'},
+        {status: 500},
+      )
+    }
 
     const html = `
       <h2>Uusi viesti sivustolta</h2>
@@ -50,16 +70,9 @@ export async function POST(req: Request) {
       html,
     })
 
-    return Response.json({ok: true})
+    return NextResponse.json({ok: true})
   } catch (err) {
-    console.error(err)
-    return Response.json({ok: false, message: 'Palvelinvirhe.'}, {status: 500})
+    console.error('contact error:', err)
+    return NextResponse.json({ok: false, message: 'Palvelinvirhe.'}, {status: 500})
   }
-}
-
-function escapeHtml(str: string) {
-  return str.replace(
-    /[&<>"']/g,
-    (m) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'})[m] as string,
-  )
 }
