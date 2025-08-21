@@ -87,7 +87,7 @@ export async function HomePage({data}: HomePageProps) {
           ) : (
             // No posts → Orbs + Contact
             <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-7">
+              <div className="lg:col-span-7 p-6">
                 <AlternatePanel
                   heading="Tähän nostan tulevaisuudessa kiinnostavia ilmiöitä."
                   sub="Sillä välin ota yhteyttä — vastaan mielelläni kysymyksiin."

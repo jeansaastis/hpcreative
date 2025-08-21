@@ -1,20 +1,14 @@
 import {LinkedInIcon} from '@/components/icons/LinkedIn'
 
 export default function BlogEmptyPanel({
-  heading = 'Tänne nostan kiinnostavia ilmiöitä, kun ehdin kirjoittaa.',
-  sub = 'Sillä välin ota yhteyttä — vastaan mielelläni kysymyksiin.',
+  heading = '',
+  sub = '',
   linkedinUrl,
-  email,
-  phone,
 }: {
   heading?: string
   sub?: string
   linkedinUrl?: string
-  email?: string
-  phone?: string
 }) {
-  const telHref = phone ? `tel:${phone.replace(/\s+/g, '')}` : undefined
-
   return (
     <div className="p-0 sm:p-0">
       {/* Heading — same “feel” as earlier (display, bold, blue) */}
@@ -30,11 +24,11 @@ export default function BlogEmptyPanel({
             href={linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="pt-6 inline-flex items-center gap-2 hover:opacity-90"
+            className="p-5 mt-2 rounded-full border-2 border-[#11171C] inline-flex items-center gap-2 hover:bg-black/100 hover:text-white"
             aria-label="LinkedIn"
           >
-            <LinkedInIcon className="h-7 w-7" />
-            <span className="text-xl">Löydät minut myös LinkedIn-palvelusta.</span>
+            <LinkedInIcon className=" h-4 w-4 md:h-7 md:w-7" />
+            <span className="text-sm md:text-lg">Löydät minut myös LinkedIn-palvelusta</span>
           </a>
         )}
       </div>
