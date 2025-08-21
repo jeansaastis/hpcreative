@@ -93,6 +93,10 @@ export default function PageTransition() {
     return () => {
       document.removeEventListener('click', onClick, true)
       window.removeEventListener('popstate', onPop)
+      if (hideTimer.current) {
+        window.clearTimeout(hideTimer.current)
+        hideTimer.current = null
+      }
     }
   }, [router, reduce])
 

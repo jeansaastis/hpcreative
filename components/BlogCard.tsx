@@ -29,12 +29,13 @@ export default function BlogCard({post}: {post: Post}) {
         <a
           href={href}
           {...(isExternal ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
-          className="block w-full h-full"
+          className="relative block w-full h-full"
           aria-label={post.title || 'Blog post'}
         >
           <Image
             src={post.coverImage}
             alt={post.title || 'Cover image'}
+            priority={priority}
             fill
             sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"

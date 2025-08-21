@@ -8,25 +8,29 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 interface NavbarProps {
-  data: SettingsQueryResult
+  // add the optional field to the type so TS is happy
+  data: SettingsQueryResult & {hasBlogPosts?: boolean}
 }
 
 export function Navbar({data}: NavbarProps) {
   const dataAttribute =
     data?._id && data?._type
-      ? createDataAttribute({
-          baseUrl: studioUrl,
-          id: data._id,
-          type: data._type,
-        })
+      ? createDataAttribute({baseUrl: studioUrl, id: data._id, type: data._type})
       : null
 
-  // Split items into left / right for layout
-  const half = Math.ceil((data.menuItems?.length || 0) / 2)
-  const leftItems = data.menuItems?.slice(0, half) || []
-  const rightItems = data.menuItems?.slice(half) || []
+  const hasBlogPosts = !!data?.hasBlogPosts
 
-  const logoUrl = data?.logoLight?.asset?.url ?? null
+  // Hide "blog" item if there are no posts
+  const isBlogItem = (mi: any) => mi?.slug === 'blog' || mi?._type === 'blog'
+  const filtered = (data.menuItems || []).filter((mi: any) => !(isBlogItem(mi) && !hasBlogPosts))
+
+  // Split after filtering (keeps layout balanced)
+  const half = Math.ceil(filtered.length / 2)
+  const leftItems = filtered.slice(0, half)
+  const rightItems = filtered.slice(half)
+
+  // Single logo choice (unchanged)
+  const logoUrl = data?.logoLight?.asset?.url ?? data?.logoDark?.asset?.url ?? null
   const logoAlt = data?.logoLight?.alt || data?.logoDark?.alt || 'Site logo'
 
   return (
@@ -34,7 +38,7 @@ export function Navbar({data}: NavbarProps) {
       className="sticky top-0 z-20 flex items-center justify-between bg-white/90 backdrop-blur-sm px-4 py-4 md:px-16 md:py-5 lg:px-32"
       data-sanity={dataAttribute?.('menuItems')}
     >
-      {/* Left menu */}
+      {/* Left */}
       <nav className="flex items-center gap-x-5">
         {leftItems.map((menuItem) => {
           const href = menuItem._type === 'home' ? '/' : resolveHref(menuItem._type, menuItem.slug)
@@ -54,7 +58,7 @@ export function Navbar({data}: NavbarProps) {
         })}
       </nav>
 
-      {/* Center logo (always the same) */}
+      {/* Center logo */}
       <Link href="/" className="flex-shrink-0" aria-label="Home">
         {logoUrl ? (
           <Image
@@ -70,7 +74,7 @@ export function Navbar({data}: NavbarProps) {
         )}
       </Link>
 
-      {/* Right menu + socials */}
+      {/* Right */}
       <nav className="flex items-center gap-x-5">
         {rightItems.map((menuItem) => {
           const href = menuItem._type === 'home' ? '/' : resolveHref(menuItem._type, menuItem.slug)

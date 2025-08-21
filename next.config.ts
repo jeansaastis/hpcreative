@@ -6,7 +6,7 @@ const config: NextConfig = {
     reactCompiler: true,
   },
   images: {
-    remotePatterns: [{hostname: 'cdn.sanity.io'}],
+    remotePatterns: [{protocol: 'https', hostname: 'cdn.sanity.io'}],
   },
   typescript: {
     ignoreBuildErrors: true, // always ignore

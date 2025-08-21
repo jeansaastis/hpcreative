@@ -1,3 +1,4 @@
+import AlternatePanel from '@/components/AlternatePanel'
 import BlogCard from '@/components/BlogCard'
 import ContactMe from '@/components/ContactMe'
 import {Header} from '@/components/Header'
@@ -8,6 +9,8 @@ import SkillsGrid from '@/components/SkillsGrid'
 import TestimonialsSection from '@/components/TestimonialsSection'
 import type {HomePageQueryResult} from '@/sanity.types'
 import {studioUrl} from '@/sanity/lib/api'
+import {sanityFetch} from '@/sanity/lib/live'
+import {settingsQuery} from '@/sanity/lib/queries'
 import {resolveHref} from '@/sanity/lib/utils'
 import {createDataAttribute} from 'next-sanity'
 import {draftMode} from 'next/headers'
@@ -30,6 +33,8 @@ export async function HomePage({data}: HomePageProps) {
   const mediaGallery = data?.mediaGallery ?? []
   const cvSection = data?.cvSection
   const testimonials = data?.testimonials ?? []
+  const {data: settings} = await sanityFetch({query: settingsQuery, stega: false})
+  const linkedinUrl = settings?.linkedinUrl || undefined
 
   const dataAttribute =
     data?._id && data?._type
@@ -55,33 +60,47 @@ export async function HomePage({data}: HomePageProps) {
       ) : null}
 
       {/* Blog */}
-      {blogPosts.length > 0 && (
-        <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-white">
-          <div className="w-full">
+      <section className="w-full pt-5 sm:pt-20 px-3 md:px-10 bg-white">
+        <div className="w-full">
+          {Array.isArray(blogPosts) && blogPosts.length > 0 && (
             <h2 id="blogi-heading" className="text-blue hp-h2 hp-h2--light hp-h2--left p-5">
               Blogi — uusimmat
             </h2>
+          )}
 
+          {Array.isArray(blogPosts) && blogPosts.length > 0 ? (
+            // With posts
             <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-16">
-              {/* Left: latest 1–2 posts */}
               <div className="lg:col-span-7">
                 <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2 pl-0 ml-0 list-none">
-                  {blogPosts.slice(0, 2).map((post: any) => (
+                  {blogPosts.slice(0, 2).map((post: any, i: number) => (
                     <li key={post._id || post._key}>
-                      <BlogCard post={post} />
+                      <BlogCard post={post} priority={i === 0} />
                     </li>
                   ))}
                 </ul>
               </div>
-
-              {/* Right: contact form */}
-              <div className="lg:col-span-5 lg:border-black/10 lg:pl-12">
+              <div id="contact" className="lg:col-span-5 lg:border-black/10 lg:pl-12">
                 <ContactMe />
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            // No posts → Orbs + Contact
+            <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-16">
+              <div className="lg:col-span-7">
+                <AlternatePanel
+                  heading="Tähän nostan tulevaisuudessa kiinnostavia ilmiöitä."
+                  sub="Sillä välin ota yhteyttä — vastaan mielelläni kysymyksiin."
+                  linkedinUrl={linkedinUrl}
+                />
+              </div>
+              <div id="contact" className="lg:col-span-5 lg:border-black/10 lg:pl-12">
+                <ContactMe />
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Testimonials */}
       {testimonials.length > 0 && <TestimonialsSection testimonials={testimonials} />}

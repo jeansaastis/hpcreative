@@ -11,33 +11,22 @@ export const homePageQuery = defineQuery(`
     mediaGallery[]{ title, description, url, image{ asset->{ url } } },
     cvSection{ content[], image{ asset->{ url } } },
     testimonials[]->{ _id, quote, author, role, portrait{ asset->{ url } } },
+
+    // IMPORTANT: only return explicitly selected posts; otherwise []
     "blogPosts": select(
-      defined(blogPosts) && count(blogPosts) > 0 =>
+      count(coalesce(blogPosts, [])) > 0 =>
         blogPosts[]->{
-          _id, _type,
+          _id, _type, title,
           "slug": slug.current,
-          title,
+          "coverImage": coalesce(coverImage.asset->url, null),
+          "overview": coalesce(overview, ingress),
           publishedAt,
-          publisher,
-          "coverImage": coverImage.asset->url,
-          overview,
-          tags,
           externalUrl,
+          publisher,
           cardVariant
         },
-      *[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{
-        _id, _type,
-        "slug": slug.current,
-        title,
-        publishedAt,
-        publisher,
-        "coverImage": coverImage.asset->url,
-        overview,
-        tags,
-        externalUrl,
-        cardVariant
-      }
-    )
+      []
+    ),
   }
 `)
 
@@ -53,7 +42,7 @@ export const allBlogPostsQuery = defineQuery(`
     "slug": slug.current,
     title,
     publishedAt,
-    "coverImage": coverImage.asset->url,
+    "coverImage": coalesce(coverImage.asset->url, null),
     overview,
     tags,
     publisher,
@@ -67,7 +56,7 @@ export const blogPostBySlugQuery = defineQuery(`
     title,
     publishedAt,
     publisher,
-    "coverImage": coverImage.asset->url,
+    "coverImage": coalesce(coverImage.asset->url, null),
     overview,
     body,
     "slug": slug.current,
@@ -81,7 +70,8 @@ export const settingsQuery = defineQuery(`
     logoLight{ asset->{ url }, alt },
     logoDark{ asset->{ url }, alt },
     menuItems[]{ _key, ...@->{ _type, "slug": slug.current, title } },
-    ogImage
+    ogImage,
+    "hasBlogPosts": count(*[_type == "blogPost" && defined(slug.current)]) > 0
   }
 `)
 

@@ -86,13 +86,15 @@ export default function MediaCvSwitcher({
                   <>
                     {/* Image */}
                     {item.image?.asset?.url && (
-                      <Image
-                        src={item.image.asset.url}
-                        alt={item.title || 'Media image'}
-                        fill
-                        sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <div className="relative h-full">
+                        <Image
+                          src={item.image.asset.url}
+                          alt={item.title || 'Media image'}
+                          fill
+                          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
                     )}
 
                     {/* Overlay */}
