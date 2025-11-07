@@ -1,4 +1,3 @@
-import './globals.css'
 import {Bricolage_Grotesque, Gabarito, IBM_Plex_Mono, PT_Serif} from 'next/font/google'
 
 const serif = PT_Serif({
