@@ -27,7 +27,7 @@
     "date-fns": "4.1.0",
     "framer-motion": "^12.23.12",
     "matter-js": "^0.20.0",
-    "next": "15.4.5",
+    "next": "15.4.8",
     "next-sanity": "10.0.10",
     "nodemailer": "^7.0.5",
     "react": "19.1.1",
