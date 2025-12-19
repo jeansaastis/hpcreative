@@ -1,4 +1,5 @@
 import {Bricolage_Grotesque, Gabarito, IBM_Plex_Mono, PT_Serif} from 'next/font/google'
+import {Analytics} from '@vercel/analytics/next'
 
 const serif = PT_Serif({
   variable: '--font-serif',
@@ -33,7 +34,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       lang="fi"
       className={`${mono.variable} ${sans.variable} ${serif.variable} ${display.variable}`}
     >
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
